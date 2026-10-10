@@ -2,5 +2,5 @@
 .cache/
 __pycache__/
 # Material original del cliente: pesado (~150 MB) y privado
-Assets/
-brand/manual/
+/Assets/
+/brand/manual/
