@@ -1,5 +1,5 @@
 // Compara docs/ (servido local) contra las capturas de referencia de Wix en source/reference.
-// Uso: node tools/compare.mjs [anchos separados por coma]   -> escribe .cache/compare/*.png y un resumen
+// Uso: node tools/compare.mjs [anchos separados por coma]   (TF_URL=https://... para comparar el sitio publicado)   -> escribe .cache/compare/*.png y un resumen
 import { createRequire } from 'module';
 import { execSync, spawn } from 'child_process';
 import { fileURLToPath } from 'url';
@@ -20,7 +20,7 @@ const browser = await chromium.launch();
 try {
   for (const w of widths) {
     const p = await browser.newPage({ viewport: { width: w, height: 900 } });
-    await p.goto('http://localhost:8765/', { waitUntil: 'load' });
+    await p.goto(process.env.TF_URL || 'http://localhost:8765/', { waitUntil: 'load' });
     await p.evaluate(() => document.fonts.ready);
     const H = await p.evaluate(() => document.documentElement.scrollHeight);
     for (let y = 0; y < H; y += 300) { await p.evaluate(y => scrollTo(0, y), y); await p.waitForTimeout(60); }

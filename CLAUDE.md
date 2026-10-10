@@ -24,7 +24,7 @@ No es un sitio escrito a mano: es el DOM + CSS renderizado de Wix, sin el JS de 
 node tools/capture_wix.mjs            # re-capturar Wix (necesita playwright global: npm i -g playwright)
 python3 tools/build_site.py           # generar docs/ (python3 + Pillow, ffmpeg)
 python3 -m http.server 8765 -d docs   # ver local
-node tools/compare.mjs [1440,390]     # diff píxel vs referencia de Wix → .cache/compare/diff-<w>.png
+node tools/compare.mjs [1440,390]     # diff píxel vs referencia de Wix → .cache/compare/diff-<w>.png (TF_URL=<url> para el publicado)
 node tools/compare_interactions.mjs   # hover tarjeta, tab FAQ, menú mobile, hover CTA: Wix vs clon lado a lado
 python3 tools/diff_bands.py ref.png clone.png out.png 30 y0:y1 ...   # ver franjas concretas (ref|clon|diff)
 tools/build_logos.sh                  # regenerar brand/logos y brand/favicon desde el manual (pág. 7)
