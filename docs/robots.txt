@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://valentineffi.github.io/tefacturo-web/sitemap.xml
