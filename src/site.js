@@ -259,14 +259,14 @@
     arrows();
   });
 
-  /* ---------- videos: reproducir sólo cuando se ven ---------- */
+  /* ---------- videos: bajar y reproducir sólo cuando se ven ---------- */
   if ('IntersectionObserver' in window) {
     var vio = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         var v = e.target;
         if (e.isIntersecting) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } else v.pause();
       });
-    });
+    });  // preload="none" en el HTML: el video se baja recién al verse (mientras tanto, el póster)
     $$('video').forEach(function (v) { v.muted = true; vio.observe(v); });
   }
 

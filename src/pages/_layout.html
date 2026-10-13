@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{TITLE}}</title>
+<meta name="description" content="{{DESCRIPTION}}">
+<meta name="robots" content="{{ROBOTS}}">
+<link rel="canonical" href="{{URL}}">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_AR">
+<meta property="og:site_name" content="TeFacturo">
+<meta property="og:title" content="{{TITLE}}">
+<meta property="og:description" content="{{DESCRIPTION}}">
+<meta property="og:url" content="{{URL}}">
+<meta property="og:image" content="{{OG_IMAGE}}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#FF5B04">
+<link rel="icon" href="{{PRE}}assets/favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{{PRE}}assets/favicon/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="{{PRE}}assets/favicon/apple-touch-icon.png">
+<link rel="preload" href="{{PRE}}assets/fonts/5571db152c57bebf.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="{{PRE}}assets/css/pages.css">
+<style>@font-face{font-family:"Inter";font-style:normal;font-weight:100 900;font-display:swap;src:url("{{PRE}}assets/fonts/5571db152c57bebf.woff2") format("woff2")}</style>
+<script type="application/ld+json">{{SCHEMA}}</script>
+</head>
+<body>
+<a class="skip" href="#contenido">Ir al contenido</a>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="logo" href="{{PRE}}" aria-label="TeFacturo, ir al inicio"><img src="{{PRE}}assets/brand/tefacturo-isologotipo-horizontal-negro.svg" alt="TeFacturo" width="150" height="27"></a>
+    <nav class="top-nav" aria-label="Principal">
+      <a href="{{PRE}}">Inicio</a>
+      <a href="{{PRE}}recursos/">Recursos</a>
+      <a class="btn btn-sm" href="{{WHATSAPP}}" rel="noopener">Quiero mi TeFacturo</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenido">
+  <div class="hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Ruta"><a href="{{PRE}}">Inicio</a><span aria-hidden="true">/</span>{{CRUMB}}</nav>
+      <p class="kicker">{{KICKER}}</p>
+      <h1>{{H1}}</h1>
+      {{LEAD}}
+      {{UPDATED}}
+    </div>
+  </div>
+
+  <article class="prose wrap">
+{{BODY}}
+  </article>
+
+  <section class="cta wrap" aria-labelledby="cta-t">
+    <div class="cta-in">
+      <h2 id="cta-t">Facturá en segundos, sin vueltas</h2>
+      <p>Te ayudamos con ARCA, configuramos el sistema y te lo entregamos listo para emitir tu primera factura.</p>
+      <a class="btn" href="{{WHATSAPP}}" rel="noopener">Hablemos por WhatsApp</a>
+    </div>
+  </section>
+
+  {{RELATED}}
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div>
+      <img src="{{PRE}}assets/brand/tefacturo-isologotipo-horizontal-blanco.svg" alt="TeFacturo" width="150" height="27" loading="lazy">
+      <p>Sistema de facturación electrónica simple para pequeños y medianos comercios.</p>
+      <p>Mitre 1058, Coronel Suárez, Buenos Aires<br><a href="{{WHATSAPP}}" rel="noopener">+54 9 2926 508200</a><br><a href="mailto:contacto@tefacturo.com.ar">contacto@tefacturo.com.ar</a></p>
+    </div>
+    <div>
+      <p class="foot-t">Recursos</p>
+      <ul>{{FOOTER_LINKS}}</ul>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

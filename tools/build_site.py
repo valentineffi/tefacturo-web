@@ -6,9 +6,12 @@ Entrada:  source/wix-dom.html, wix-css.json, wix-features.json, wix-media-sizes.
 Salida:   docs/index.html + docs/assets/{css,js,img,video,fonts,docs}
 Caché:    .cache/ (originales bajados de Wix; no se versiona)
 """
-import hashlib, html, json, os, re, shutil, subprocess, sys, unicodedata, urllib.request
+import datetime, hashlib, html, json, os, re, shutil, subprocess, sys, unicodedata, urllib.request
 from pathlib import Path
 from PIL import Image
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import pages  # noqa: E402  (páginas de contenido propias: src/pages/)
 
 Image.MAX_IMAGE_PIXELS = None
 ROOT = Path(__file__).resolve().parent.parent
@@ -17,8 +20,8 @@ A = OUT / 'assets'
 
 SITE_URL = 'https://valentineffi.github.io/tefacturo-web/'   # se ajusta al pasar a tefacturo.com.ar
 TITLE = 'TeFacturo | Sistema de facturación electrónica simple'
-DESCRIPTION = ('TeFacturo es un sistema de facturación electrónica simple pensado para pequeños y medianos '
-               'comercios: software fácil de usar con un equipo POS dedicado para facturar en segundos.')
+DESCRIPTION = ('Sistema de facturación electrónica simple para pequeños y medianos comercios de Argentina: '
+               'software fácil de usar y equipo POS para facturar con ARCA en segundos.')
 
 # Secciones (ids de Wix) a las que apuntan las anclas — de wix-features.json > scrollToAnchor
 ANCHORS = json.loads((SRC / 'wix-features.json').read_text())['props']['scrollToAnchor']['anchorDataIdToCompIdMap']
@@ -42,6 +45,16 @@ ALTS = {
 # Desvíos deliberados respecto del Wix (ver CLAUDE.md > "Diferencias con Wix")
 WHATSAPP_URL = 'https://wa.me/5492926508200'
 PDF_NAME = 'Funcionalidades-Principales-TeFacturo.pdf'
+
+# Correcciones de texto aprobadas por el cliente (typos y un dato erróneo del Wix)
+TEXT_FIXES = [
+    ('Sí, uestro sistema', 'Sí, nuestro sistema'),
+    ('ARCA (Administración Federal de Ingresos Públicos)', 'ARCA (Agencia de Recaudación y Control Aduanero, ex AFIP)'),
+    ('>Sí! TeFacturo', '>¡Sí! TeFacturo'),
+    ('Solo necesitas completar un formulario con tus datos fiscales, Nosotros',
+     'Solo necesitás completar un formulario con tus datos fiscales, nosotros'),
+    ('Por qué elegrinos', 'Por qué elegirnos'),
+]
 
 
 def fetch(url, dest):
@@ -224,8 +237,42 @@ def rewrite_videos(dom):
         if not poster.exists():
             Image.open(poster_src).convert('RGB').resize((720, 720), Image.LANCZOS).save(poster, 'WEBP', quality=82)
         tag = re.sub(r'\ssrc="[^"]*"', ' src="assets/video/%s" poster="assets/video/%s"' % (out.name, poster.name), tag)
+        # Todos están debajo del primer pantallazo: no se bajan hasta que el runtime los ve (data-autoplay)
+        tag = tag.replace(' preload="auto"', ' preload="none"').replace(' autoplay=""', ' data-autoplay=""')
         return tag.replace(' crossorigin="anonymous"', '')
-    return re.sub(r'<video\b[^>]*src="https://video\.wixstatic\.com/video/(63393a_[0-9a-f]{32})/[^"]*"[^>]*>', fix, dom)
+    dom = re.sub(r'<video\b[^>]*src="https://video\.wixstatic\.com/video/(63393a_[0-9a-f]{32})/[^"]*"[^>]*>', fix, dom)
+    # Póster de fondo que Wix pone detrás de cada video (opacity 0, pero se bajaba de wixstatic con prioridad alta)
+    def poster_img(m):
+        tag = re.sub(r'\ssrc="[^"]*"', ' src="assets/video/%s.webp"' % m.group(1)[7:19], m.group(0))
+        return re.sub(r'\sfetchpriority="[^"]*"', '', tag)[:-1] + ' loading="lazy" decoding="async">'
+    return re.sub(r'<img src="https://static\.wixstatic\.com/media/(63393a_[0-9a-f]{32})f000\.jpg[^"]*"[^>]*>', poster_img, dom)
+
+
+# ---------------------------------------------------------------- Semántica (sin cambios visuales)
+H1_TEXT = 'TeFacturo: facturación electrónica ágil, simple y sin vueltas'
+# Textos que en Wix son <h2>/<h6> pero no son títulos (datos de contacto, subtítulos, menú) -> <p> con la misma clase
+NOT_HEADINGS = ['Por qué elegirnos', 'Sobre Nosotros', 'Modo de Uso', 'Funciones', 'Contacto',
+                'Si tenés alguna duda', 'Mitre 1058', 'Dirección', '+54 9 2926', 'Teléfono', 'Mail',
+                'contacto@tefacturo', 'ariel.tallerpd', 'Diseñadas para cubrir']
+
+
+def semantics(dom):
+    def demote(m):
+        text = html.unescape(re.sub(r'<[^>]+>', '', m.group(3))).strip()
+        if not any(text.startswith(t) for t in NOT_HEADINGS):
+            return m.group(0)
+        return '<p%s>%s</p>' % (m.group(2), m.group(3))
+    dom, n = re.subn(r'<(h[26])(\b[^>]*)>(.*?)</\1>', demote, dom, flags=re.S)
+    # La portada es una imagen-título: un <h1> solo para lectores de pantalla y buscadores
+    h1 = '<h1 style="position:absolute;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">%s</h1>' % html.escape(H1_TEXT)
+    dom = re.sub(r'(<main\b[^>]*>)', r'\1' + h1, dom, count=1)
+    # Imágenes de la portada (LCP): prioridad alta
+    first = re.compile(r'<section id="(comp-[^"]+)".*?</section>', re.S).search(dom, dom.find('<main'))
+    if first:
+        sec = re.sub(r'<img\b(?![^>]*fetchpriority)', '<img fetchpriority="high"', first.group(0))
+        dom = dom[:first.start()] + sec + dom[first.end():]
+    print('  semantics: %d headings revisados, h1 + LCP en %s' % (n, first and first.group(1)))
+    return dom
 
 
 # ---------------------------------------------------------------- Limpieza del DOM
@@ -300,8 +347,14 @@ def head():
 <meta property="og:title" content="{t}">
 <meta property="og:description" content="{d}">
 <meta property="og:url" content="{u}">
+<meta property="og:site_name" content="TeFacturo">
 <meta property="og:image" content="{u}assets/img/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TeFacturo, sistema de facturación electrónica">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{t}">
+<meta name="twitter:description" content="{d}">
 <meta name="theme-color" content="#FF5B04">
 <link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="assets/favicon/favicon-32.png" sizes="32x32" type="image/png">
@@ -309,12 +362,70 @@ def head():
 <link rel="stylesheet" href="assets/css/site.css">
 <noscript><style>[id^="comp-"]{{animation:none!important}}</style></noscript>
 <script type="application/ld+json">{ld}</script>
-'''.format(t=html.escape(TITLE), d=html.escape(DESCRIPTION), u=SITE_URL, ld=json.dumps({
-        '@context': 'https://schema.org', '@type': 'Organization', 'name': 'TeFacturo', 'url': SITE_URL,
-        'logo': SITE_URL + 'assets/favicon/icon-512.png', 'email': 'contacto@tefacturo.com.ar',
-        'telephone': '+54 9 2926 508200',
-        'address': {'@type': 'PostalAddress', 'streetAddress': 'Mitre 1058', 'addressLocality': 'Coronel Suárez',
-                    'addressRegion': 'Buenos Aires', 'addressCountry': 'AR'}}, ensure_ascii=False))
+'''.format(t=html.escape(TITLE), d=html.escape(DESCRIPTION), u=SITE_URL, ld=json.dumps(schema(), ensure_ascii=False))
+
+
+def schema():
+    org = SITE_URL + '#organization'
+    return {'@context': 'https://schema.org', '@graph': [
+        {'@type': 'Organization', '@id': org, 'name': 'TeFacturo', 'url': SITE_URL,
+         'logo': SITE_URL + 'assets/favicon/icon-512.png', 'image': SITE_URL + 'assets/img/og-image.png',
+         'description': DESCRIPTION, 'email': 'contacto@tefacturo.com.ar', 'telephone': '+54 9 2926 508200',
+         'address': {'@type': 'PostalAddress', 'streetAddress': 'Mitre 1058', 'addressLocality': 'Coronel Suárez',
+                     'addressRegion': 'Buenos Aires', 'addressCountry': 'AR'},
+         'areaServed': {'@type': 'Country', 'name': 'Argentina'},
+         'contactPoint': {'@type': 'ContactPoint', 'contactType': 'customer support', 'telephone': '+54 9 2926 508200',
+                          'email': 'contacto@tefacturo.com.ar', 'availableLanguage': 'es'}},
+        {'@type': 'WebSite', '@id': SITE_URL + '#website', 'url': SITE_URL, 'name': 'TeFacturo',
+         'inLanguage': 'es-AR', 'publisher': {'@id': org}},
+        {'@type': 'SoftwareApplication', 'name': 'TeFacturo', 'url': SITE_URL,
+         'applicationCategory': 'BusinessApplication', 'operatingSystem': 'Android, Windows, Linux',
+         'description': DESCRIPTION, 'publisher': {'@id': org}, 'inLanguage': 'es-AR',
+         'featureList': [
+             'Facturación electrónica ARCA (ex AFIP): Facturas A, B y C con CAE automático',
+             'Notas de crédito y débito',
+             'Gestión de productos con alta masiva por CSV/Excel, variantes y categorías',
+             'Reportes de ventas con KPIs y filtros por fecha, punto de venta, vendedor y cliente',
+             'Impresión térmica y PDF: tickets, notas de crédito y etiquetas de góndola',
+             'Equipos POS, impresoras térmicas y tablets preconfigurados']},
+    ]}
+
+
+def llms_txt(extra=()):
+    """Resumen en Markdown para buscadores con IA (llmstxt.org), armado solo con contenido que ya está en el sitio."""
+    return '''# TeFacturo
+
+> {d}
+
+TeFacturo combina software fácil de usar con un equipo POS dedicado para que cualquier negocio pueda emitir
+facturas de manera rápida y sin complicaciones: prender el equipo, facturar en segundos e imprimir el comprobante,
+sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo de ARCA (ex AFIP).
+
+## Funcionalidades
+
+- Facturación electrónica ARCA: Facturas A, B y C con CAE automático; notas de crédito y débito.
+- Gestión de productos: alta masiva por CSV/Excel, variantes, categorías jerárquicas y departamentos con impuestos internos.
+- Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.
+- Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola; detección automática de impresoras en red.
+- Aplicación nativa para Android (Google Play) y PC (Windows y Linux).
+- Equipos opcionales listos para usar: impresoras térmicas, terminales POS, tablets y kits completos, con el software ya instalado.
+
+## Cómo empezar
+
+1. Contanos sobre tu negocio: completás un formulario con tus datos fiscales.
+2. Asesoramiento y configuración: te guiamos en ARCA, configuramos el sistema y hacemos la puesta en marcha.
+3. Recibís tu sistema listo para facturar (acceso a tu cuenta o el dispositivo físico).
+4. Emitís tu primera factura.
+
+## Contacto
+
+- Web: {u}
+- WhatsApp: {w}
+- Email: contacto@tefacturo.com.ar
+- Dirección: Mitre 1058, Coronel Suárez, Buenos Aires, Argentina
+- [Funcionalidades principales (PDF)]({u}assets/docs/{p})
+'''.format(d=DESCRIPTION, u=SITE_URL, w=WHATSAPP_URL, p=PDF_NAME) + (
+        '\n## Guías y páginas\n\n' + ''.join('- [%s](%s): %s\n' % (t, u, d) for u, _, t, d in extra) if extra else '')
 
 
 def runtime_config():
@@ -332,18 +443,27 @@ def main():
     dom = Images().rewrite(dom)
     dom = rewrite_videos(dom)
     dom = rewrite_links(dom)
+    dom = semantics(dom)
+    for a, b in TEXT_FIXES:
+        if a not in dom:
+            print('  OJO: no encontré el texto a corregir:', a)
+        dom = dom.replace(a, b)
     dom = re.sub(r'<html[^>]*>', '<html lang="es-AR">', dom, count=1)
     dom = re.sub(r'<head>', '<head>\n' + head(), dom, count=1)
     cfg = '<script>window.TF_CONFIG=%s</script>\n<script src="assets/js/site.js" defer></script>\n' % json.dumps(runtime_config(), separators=(',', ':'))
-    dom = dom.replace('</body>', cfg + '</body>')
+    dom = dom.replace('</body>', pages.home_footer() + cfg + '</body>')
     (OUT / 'index.html').write_text('<!DOCTYPE html>\n' + re.sub(r'^\s*<!DOCTYPE html>\s*', '', dom, flags=re.I), encoding='utf-8')
     shutil.copy(ROOT / 'src' / 'site.js', A / 'js' / 'site.js')
     for f in (ROOT / 'brand' / 'favicon').iterdir():
         shutil.copy(f, A / 'favicon' / f.name)
     (OUT / '.nojekyll').write_text('')
     (OUT / 'robots.txt').write_text('User-agent: *\nAllow: /\n\nSitemap: %ssitemap.xml\n' % SITE_URL)
+    extra = pages.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})
+    urls = [(SITE_URL, datetime.date.today().isoformat())] + [(u, d) for u, d, _, _ in extra]
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-                                     '  <url><loc>%s</loc></url>\n</urlset>\n' % SITE_URL)
+                                     + ''.join('  <url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % u for u in urls)
+                                     + '</urlset>\n')
+    (OUT / 'llms.txt').write_text(llms_txt(extra), encoding='utf-8')
     og = ROOT / 'brand' / 'og-image.png'
     if og.exists():
         shutil.copy(og, A / 'img' / 'og-image.png')

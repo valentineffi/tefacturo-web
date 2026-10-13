@@ -16,6 +16,8 @@ No es un sitio escrito a mano: es el DOM + CSS renderizado de Wix, sin el JS de 
 2. `tools/build_site.py` → `docs/`: baja originales de Wix a `.cache/` (imágenes, videos, fuentes, PDF), genera WebP responsive (`srcset` + `sizes` calculados de las medidas reales), recomprime videos (540p H.264), reescribe URLs, saca scripts/banner de Wix y elementos sobrantes del template, inyecta `head` (SEO/OG/favicon) y `window.TF_CONFIG`.
 3. `src/site.js` (runtime, se copia a `docs/assets/js/`): reimplementa lo que hacía el JS de Wix leyendo **la misma config de Wix** (`triggersAndReactions`): animaciones de entrada (IntersectionObserver + `animation-play-state`, marca `data-motion-enter="done"` al terminar), estados hover/click (clases `variants-*`), menú hamburguesa (mueve el `<nav>` al overlay), tabs de FAQ, scroll a anclas, `--scrollbar-width`.
 
+4. `tools/pages.py` → páginas de contenido propias para SEO (no son Wix): `src/pages/<slug>.html` (cabecera JSON `<!--page {...} -->` + cuerpo HTML) con `src/pages/_layout.html` y `_pages.css` → `docs/<slug>/index.html`, más `/recursos/` (índice), `404.html`, y entradas en `sitemap.xml` y `llms.txt`. Para agregar una página: crear el `.html` en `src/pages/` y correr el build. La home lleva al pie una banda "Guías y recursos" (`pages.home_footer()`, agregado propio debajo de todo el contenido de Wix: el clon mide ~300 px más que la referencia y `compare.mjs` compara hasta el alto de la referencia). Contenido nuevo: solo datos que estén en el sitio o sean normativa verificable de ARCA (nada de precios, testimonios ni cifras inventadas) y consultar con el usuario.
+
 **Nunca editar `docs/` a mano**: se regenera. Los cambios van en `src/site.js`, `tools/build_site.py` o se re-captura de Wix.
 
 ## Comandos
@@ -30,7 +32,7 @@ python3 tools/diff_bands.py ref.png clone.png out.png 30 y0:y1 ...   # ver franj
 tools/build_logos.sh                  # regenerar brand/logos y brand/favicon desde el manual (pág. 7)
 ```
 
-Estado de referencia de `compare.mjs`: misma altura en todos los anchos (30 px menos = banner de Wix eliminado) y ~1,3–1,8 % de píxeles distintos, todo en bordes de imágenes rasterizadas (Wix sirve AVIF con unsharp mask) y frames de video. Si sube de eso, algo se rompió.
+Estado de referencia de `compare.mjs`: misma altura en todos los anchos (30 px menos = banner de Wix eliminado; el footer de guías queda fuera de la comparación) y ~1,3–1,8 % de píxeles distintos, todo en bordes de imágenes rasterizadas (Wix sirve AVIF con unsharp mask) y frames de video. Si sube de eso, algo se rompió.
 
 ## Detalles que no son obvios
 
@@ -40,6 +42,8 @@ Estado de referencia de `compare.mjs`: misma altura en todos los anchos (30 px m
 - Imágenes con transparencia (degradés, curvas, títulos-imagen) se exportan en WebP **sin pérdida** para que los degradés no tengan banding; fotos en WebP q90.
 - Muchos títulos/botones son imágenes en Wix ("Ágil, simple…", "Empezar es fácil", "Preguntas frecuentes", CTAs). Se mantienen como imagen para ser idénticos; los `alt` descriptivos están en `ALTS` (build_site.py).
 - Las tarjetas de "Funcionalidades" son imagen frente (ícono) + imagen dorso (texto); el hover pone opacity 0 al frente (clase `variants-*`, transición 0.4s).
+- SEO sin cambios visuales (`semantics()` en build_site.py): `<h1>` oculto (`H1_TEXT`, la portada es una imagen-título), los `<h2>/<h6>` que no son títulos (menú, datos de contacto, subtítulos; lista `NOT_HEADINGS`) pasan a `<p>` con la misma clase (el CSS de Wix estiliza por clase `font_X`, no por etiqueta), y `fetchpriority="high"` en las imágenes de la primera sección. Schema JSON-LD en `schema()`, `llms.txt` en `llms_txt()`.
+- Videos: `preload="none"` y sin `autoplay`; el runtime los baja y reproduce al entrar en pantalla. No agregar `rootMargin` a ese observer: los videos arrancan antes y `compare.mjs` captura otro frame (sube el diff en 390 sin que haya un cambio real).
 - Hay un diálogo sobrante del template (`comp-kd5px9q0`, "SECURE YOUR BUSINESS TODAY / INFO@MYSITE.COM") que el build elimina.
 - macOS es case-insensitive: no crear `assets/` en la raíz (choca con `Assets/`).
 
@@ -50,7 +54,7 @@ En Wix estos links no funcionan o son placeholders; acá se resolvieron así (co
 - "¿Más dudas? Contactanos": en Wix va a `web.whatsapp.com`; acá a `WHATSAPP_URL` (wa.me con el teléfono del sitio).
 - PDF "Descubrí todas las funciones" se sirve local (`docs/assets/docs/`).
 - Íconos de WhatsApp/Instagram/Facebook del contacto: sin link (igual que en Wix) hasta tener las URLs.
-- Typos del Wix se mantienen tal cual (menú mobile: "Por qué elegrinos").
+- Typos y un dato erróneo del Wix (FAQ: "uestro", ARCA ≠ "Administración Federal…", menú: "elegrinos") se corrigen en el build con `TEXT_FIXES` (aprobado por el usuario, 2026-10-13). Si el build avisa "no encontré el texto a corregir", el Wix cambió.
 
 ## Assets y marca
 
