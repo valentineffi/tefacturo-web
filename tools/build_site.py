@@ -12,6 +12,7 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pages  # noqa: E402  (páginas de contenido propias: src/pages/)
+import landing  # noqa: E402  (landing de performance: src/landing/)
 
 Image.MAX_IMAGE_PIXELS = None
 ROOT = Path(__file__).resolve().parent.parent
@@ -459,6 +460,7 @@ def main():
     (OUT / '.nojekyll').write_text('')
     (OUT / 'robots.txt').write_text('User-agent: *\nAllow: /\n\nSitemap: %ssitemap.xml\n' % SITE_URL)
     extra = pages.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})
+    landing.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})  # noindex, fuera del sitemap
     urls = [(SITE_URL, datetime.date.today().isoformat())] + [(u, d) for u, d, _, _ in extra]
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                                      + ''.join('  <url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % u for u in urls)

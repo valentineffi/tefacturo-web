@@ -18,6 +18,8 @@ No es un sitio escrito a mano: es el DOM + CSS renderizado de Wix, sin el JS de 
 
 4. `tools/pages.py` → páginas de contenido propias para SEO (no son Wix): `src/pages/<slug>.html` (cabecera JSON `<!--page {...} -->` + cuerpo HTML) con `src/pages/_layout.html` y `_pages.css` → `docs/<slug>/index.html`, más `/recursos/` (índice), `404.html`, y entradas en `sitemap.xml` y `llms.txt`. Para agregar una página: crear el `.html` en `src/pages/` y correr el build. La home lleva al pie una banda "Guías y recursos" (`pages.home_footer()`, agregado propio debajo de todo el contenido de Wix: el clon mide ~300 px más que la referencia y `compare.mjs` compara hasta el alto de la referencia). Contenido nuevo: solo datos que estén en el sitio o sean normativa verificable de ARCA (nada de precios, testimonios ni cifras inventadas) y consultar con el usuario.
 
+5. `tools/landing.py` → landing de performance para anuncios (`src/landing/empezar.html` → `docs/empezar/index.html`): autocontenida (CSS/JS inline, ~37 KB), `noindex` y fuera del sitemap, única conversión = WhatsApp (con eventos `whatsapp_click` en dataLayer, `fbq Contact`, `gtag generate_lead`). IDs de Meta Pixel / Google Tag y la referencia de campaña en el mensaje se configuran arriba de `tools/landing.py`. El copy y la fuente de cada dato están en `src/landing/COPY.md`: cambiar el copy ahí primero.
+
 **Nunca editar `docs/` a mano**: se regenera. Los cambios van en `src/site.js`, `tools/build_site.py` o se re-captura de Wix.
 
 ## Comandos
