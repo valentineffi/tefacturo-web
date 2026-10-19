@@ -150,11 +150,13 @@
     'sobre nosotros': 'anchors-mnhrlr5d', 'por qué elegirnos': 'anchors-mnhrlyvi', 'modo de uso': 'anchors-mnhrn2bf',
     'funciones': 'anchors-mpcom8jf', 'contacto': 'anchors-mnhrn58c', 'quiero mi tefacturo': 'anchors-mnhrn58c'
   };
+  var navItems = [];  // los textos del menú de escritorio, para sumarles "Ingresar" (ver placeLogin)
   $$('header [id^="comp-kbgakxea_r_comp-"]').forEach(function (el) {
     if (el.closest('nav, [role="dialog"]')) return;
     var key = (el.getAttribute('aria-label') || el.textContent || '').trim().toLowerCase();
     var anchor = NAV[key];
     if (!anchor || el.querySelector('[id^="comp-"]')) return;
+    if (key !== 'quiero mi tefacturo') navItems.push(el);
     el.classList.add('has-click-trigger');
     el.addEventListener('click', function () { scrollToId(CFG.anchors[anchor]); });
   });
@@ -257,6 +259,197 @@
     scroller.addEventListener('scroll', arrows, { passive: true });
     window.addEventListener('resize', arrows);
     arrows();
+  });
+
+  /* ---------- "Ingresar": en escritorio, un ítem más del menú; en el celular, ícono al lado del menú ---------- */
+  var login = $('header .tf-login');
+  // Lo que ocupan las letras (el bloque de Wix suele ser más ancho que el texto)
+  function textBox(el) {
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), node, l = Infinity, r = -Infinity, t = Infinity, b = -Infinity;
+    while ((node = walker.nextNode())) {
+      if (!node.nodeValue.trim()) continue;
+      var range = document.createRange();
+      range.selectNodeContents(node);
+      Array.prototype.forEach.call(range.getClientRects(), function (q) {
+        if (!q.width) return;
+        l = Math.min(l, q.left); r = Math.max(r, q.right); t = Math.min(t, q.top); b = Math.max(b, q.bottom);
+      });
+    }
+    return r > l ? { left: l, right: r, top: t, bottom: b, width: r - l, height: b - t } : el.getBoundingClientRect();
+  }
+  function textStyle(el) {
+    var walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, { acceptNode: function (n) { return n.nodeValue.trim() ? 1 : 3; } });
+    var node = walker.nextNode();
+    return getComputedStyle(node ? node.parentElement : el);
+  }
+  // Escritorio: los ítems se redistribuyen con el mismo espacio entre todos, "Ingresar" incluido
+  function placeInMenu(cta, h) {
+    var items = navItems.map(function (el) { return { el: el, b: textBox(el) }; })
+      .filter(function (it) { return it.b.width; })
+      .sort(function (a, b) { return a.b.left - b.b.left; });
+    if (!items.length) return false;
+    var st = textStyle(items[0].el);
+    login.classList.add('is-text');
+    login.style.fontFamily = st.fontFamily;
+    login.style.fontSize = st.fontSize;
+    login.style.fontWeight = st.fontWeight;
+    login.style.color = st.color;
+    var w = login.getBoundingClientRect().width;
+    var widths = items.reduce(function (sum, it) { return sum + it.b.width; }, w);
+    var c = cta.getBoundingClientRect(), start = items[0].b.left;
+    var gap = (c.left - start - widths) / (items.length + 1);
+    if (gap < 18) { login.classList.remove('is-text'); login.removeAttribute('style'); return false; }
+    var x = start;
+    items.forEach(function (it) { it.el.style.transform = 'translateX(' + Math.round(x - it.b.left) + 'px)'; x += it.b.width + gap; });
+    login.style.left = Math.round(x - h.left) + 'px';
+    login.style.top = Math.round(items[0].b.top - h.top + items[0].b.height / 2) + 'px';
+    return true;
+  }
+  // Celular (o un menú sin lugar): círculo con el ícono, centrado en el hueco a la izquierda de ref
+  function placeBeside(ref, h) {
+    var r = ref.getBoundingClientRect(), left = h.left;
+    $$('header [id^="comp-kbgakxea_r_comp-"]').forEach(function (el) {
+      if (el === ref || el.contains(ref) || ref.contains(el) || el.closest('nav, [role="dialog"]')) return;
+      var b = el.getBoundingClientRect();
+      if (b.width && b.right <= r.left && b.bottom > r.top && b.top < r.bottom) left = Math.max(left, b.right);
+    });
+    var size = Math.max(28, Math.min(Math.round(r.height), Math.round(r.left - left - 16)));
+    login.classList.add('is-compact');
+    login.style.height = size + 'px';
+    login.style.setProperty('--tf-login-h', size + 'px');
+    login.style.top = Math.round(r.top - h.top + r.height / 2) + 'px';
+    login.style.right = Math.round(h.right - r.left + (r.left - left - size) / 2) + 'px';
+  }
+  function placeLogin() {
+    var header = login.parentNode, h = header.getBoundingClientRect();
+    var cta = document.getElementById('comp-kbgakxea_r_comp-mndcac9l');
+    navItems.forEach(function (el) { el.style.transform = ''; });
+    login.className = 'tf-login';
+    login.removeAttribute('style');
+    var desktop = cta && cta.getBoundingClientRect().width;
+    if (!(desktop && placeInMenu(cta, h))) {
+      var ref = desktop ? cta : menuBtn;
+      if (!ref || !ref.getBoundingClientRect().width) return;
+      placeBeside(ref, h);
+    }
+    login.classList.add('is-placed');
+  }
+  if (login) {
+    placeLogin();
+    window.addEventListener('resize', placeLogin);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeLogin);
+  }
+
+  /* ---------- planes: precios de la API (GET /api/public/plans), no del HTML ---------- */
+  var plansEl = document.getElementById('planes');
+  if (plansEl && CFG.plans && window.fetch) loadPlans(plansEl, CFG.plans);
+
+  function loadPlans(section, cfg) {
+    var grid = $('.tf-plans-grid', section), toggle = $('.tf-period', section), period = 'monthly', plans = [];
+    var AREAS = ['facturacion', 'ventas', 'clientes', 'productos', 'inventario', 'cobros', 'compras', 'reportes', 'cuenta'];
+    var VISIBLE = 6;
+    function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    function pesos(cents) { return '$ ' + Math.round(cents / 100).toLocaleString('es-AR'); }
+    function fail() {
+      grid.innerHTML = '<p class="tf-plans-msg">No pudimos cargar los planes. Consultanos por <a href="' + esc(cfg.whatsapp) + '" rel="noopener">WhatsApp</a>.</p>';
+    }
+    function features(plan) {
+      return plan.capabilities
+        .filter(function (c) { return cfg.hidden.indexOf(c.key) < 0; })
+        .sort(function (a, b) { return (AREAS.indexOf(a.area) - AREAS.indexOf(b.area)) || a.name.localeCompare(b.name, 'es'); });
+    }
+    function list(items) { return items.map(function (c) { return '<li title="' + esc(c.summary) + '">' + esc(c.name) + '</li>'; }).join(''); }
+    function card(plan, prev) {
+      var p = plan.periods.filter(function (x) { return x.period === period; })[0] || plan.periods[0];
+      var note = p.period === 'monthly' ? 'Pagando mes a mes' : pesos(p.priceCents) + ' por ' + (p.months === 12 ? 'año' : p.months + ' meses');
+      var limits = cfg.limits.map(function (key) {
+        var l = plan.limits.filter(function (x) { return x.key === key; })[0];
+        return l ? '<li><span>' + esc(l.name) + '</span><b>' + (l.value === null ? 'Sin límite' : l.value.toLocaleString('es-AR')) + '</b></li>' : '';
+      }).join('');
+      var feats = features(plan), title = 'Incluye';
+      if (prev) {
+        var had = features(prev).map(function (c) { return c.key; });
+        feats = feats.filter(function (c) { return had.indexOf(c.key) < 0; });
+        title = 'Todo lo del plan ' + esc(prev.name) + (feats.length ? ', más:' : '');
+      }
+      var more = feats.length > VISIBLE + 1
+        ? '<details class="tf-more"><summary>Ver ' + (feats.length - VISIBLE) + ' más</summary><ul class="tf-feats">' + list(feats.slice(VISIBLE)) + '</ul></details>'
+        : '';
+      var shown = more ? feats.slice(0, VISIBLE) : feats;
+      var wa = cfg.whatsapp + '?text=' + encodeURIComponent('Hola, quiero el plan ' + plan.name + ' de TeFacturo.');
+      return '<article class="tf-plan" aria-labelledby="plan-' + esc(plan.code) + '">' +
+        '<h3 id="plan-' + esc(plan.code) + '">' + esc(plan.name) + '</h3>' +
+        (plan.description ? '<p class="tf-plan-desc">' + esc(plan.description) + '</p>' : '') +
+        '<p class="tf-price"><b>' + pesos(p.monthlyPriceCents) + '</b><span>/mes</span></p>' +
+        '<p class="tf-price-note">' + note + '</p>' +
+        (limits ? '<ul class="tf-limits">' + limits + '</ul>' : '') +
+        '<p class="tf-feat-t">' + title + '</p>' +
+        (shown.length ? '<ul class="tf-feats">' + list(shown) + '</ul>' : '') + more +
+        '<div class="tf-plan-cta-wrap"><a class="tf-plan-cta" href="' + esc(wa) + '" rel="noopener">Quiero el plan ' + esc(plan.name) + '</a></div>' +
+        '</article>';
+    }
+    function render() { grid.innerHTML = plans.map(function (plan, i) { return card(plan, plans[i - 1]); }).join(''); }
+
+    var ctrl = window.AbortController ? new AbortController() : null;
+    var timeout = setTimeout(function () { if (ctrl) ctrl.abort(); }, 8000);
+    fetch(cfg.api, { signal: ctrl ? ctrl.signal : undefined, credentials: 'omit' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (body) {
+        clearTimeout(timeout);
+        plans = (body && body.data && body.data.items || []).filter(function (x) { return x.periods && x.periods.length; });
+        if (!plans.length) return fail();
+        // El selector sólo si todos los planes se pueden pagar por año
+        var annual = plans.every(function (x) { return x.periods.some(function (y) { return y.period === 'annual'; }); });
+        if (annual) {
+          var save = Math.max.apply(null, plans.map(function (x) {
+            return x.periods.filter(function (y) { return y.period === 'annual'; })[0].discountBps;
+          }));
+          $('.tf-save', toggle).textContent = save > 0 ? '· ahorrá ' + Math.round(save / 100) + ' %' : '';
+          toggle.hidden = false;
+          $$('button', toggle).forEach(function (b) {
+            b.addEventListener('click', function () {
+              period = b.getAttribute('data-period');
+              $$('button', toggle).forEach(function (x) { x.setAttribute('aria-checked', x === b ? 'true' : 'false'); });
+              render();
+            });
+          });
+        }
+        render();
+      })
+      .catch(function () { clearTimeout(timeout); fail(); });
+  }
+
+  /* ---------- descargas: la última versión publicada de cada plataforma (GET /api/app-releases/latest) ---------- */
+  if (CFG.downloads && window.fetch) $$('#descargas .tf-dl[data-platform]').forEach(function (card) {
+    var platform = card.getAttribute('data-platform');
+    function latest(arch) {
+      return fetch(CFG.downloads.api + '?platform=' + encodeURIComponent(platform) + '&arch=' + encodeURIComponent(arch), { credentials: 'omit' })
+        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+        .then(function (body) { return body && body.data && body.data.release; });
+    }
+    latest(card.getAttribute('data-arch')).then(function (rel) {
+      if (!rel || !rel.url) return;
+      var btn = $('.tf-dl-btn', card);
+      btn.removeAttribute('aria-disabled');
+      btn.href = rel.url;
+      btn.setAttribute('download', '');
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Descargar';
+      var mb = rel.sizeBytes ? ' · ' + Math.round(rel.sizeBytes / 1048576) + ' MB' : '';
+      $('.tf-dl-meta', card).textContent = 'Versión ' + rel.version + mb;
+      (CFG.downloads.alt[platform] || []).forEach(function (alt) {
+        latest(alt.arch).then(function (other) {
+          if (!other || !other.url) return;
+          var p = document.createElement('p');
+          p.className = 'tf-dl-alt';
+          var link = document.createElement('a');
+          link.href = other.url;
+          link.setAttribute('download', '');
+          link.textContent = alt.label;
+          p.appendChild(link);
+          card.insertBefore(p, $('.tf-dl-actions', card));  // arriba del botón: los botones quedan alineados
+        }).catch(function () {});
+      });
+    }).catch(function () {});
   });
 
   /* ---------- videos: bajar y reproducir sólo cuando se ven ---------- */

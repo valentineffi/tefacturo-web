@@ -57,10 +57,100 @@ FEATURE_CSS = '''
 .tf-feat-in h3,.tf-feat-in p{margin:0;font:inherit;color:inherit;letter-spacing:normal}
 .tf-feat-in h3{font-weight:600}
 .tf-feat-in p{font-weight:300}
+.tf-login{position:absolute;z-index:3;top:50%;right:230px;transform:translateY(-50%);display:inline-flex;align-items:center;box-sizing:border-box;
+  height:46px;padding:0 1.5em;border:1px solid #010A0A;border-radius:999px;background:transparent;color:#010A0A;font:600 14px/1 inter,sans-serif;
+  text-decoration:none;white-space:nowrap;visibility:hidden;transition:background-color .2s,color .2s}
+.tf-login.is-placed{visibility:visible}
+.tf-login svg{width:1.25em;height:1.25em;margin-right:.5em;flex:none}
+.tf-login.is-text{height:auto;padding:0;border:0;border-radius:0;right:auto}
+.tf-login.is-text svg{width:1em;height:1em;margin-right:.4em}
+.tf-login.is-text:hover{background:transparent;color:#FF5B04!important}
+.tf-login.is-compact{width:var(--tf-login-h,46px);padding:0;justify-content:center}
+.tf-login.is-compact svg{margin:0}
+.tf-login.is-compact span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tf-login:hover{background:#010A0A;color:#fff}
+.tf-login:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+/* Planes y Descargas: filas 9 y 10 de la grilla de secciones; preguntas frecuentes y contacto bajan dos */
+#planes{grid-area:9/1/10/2}
+#descargas{grid-area:10/1/11/2}
+#comp-mo3g1cca{grid-area:11/1/12/2}
+#comp-lxu94j0k{grid-area:12/1/13/2}
+.tf-plans{background:#F6F6F6;color:#010A0A;font-family:inter,sans-serif;padding:72px 7.5vw 88px}
+.tf-plans h2{margin:0;color:#075056;font-weight:600;font-size:clamp(32px,3.7vw,52px);line-height:1.05;letter-spacing:-.01em}
+.tf-plans-lead{margin:16px 0 0;max-width:34em;font-size:clamp(15px,1.25vw,18px);line-height:1.5;color:#3A4545}
+.tf-period{display:inline-flex;gap:4px;margin-top:28px;padding:4px;border-radius:999px;background:#E6EBEB}
+.tf-period[hidden]{display:none}
+.tf-period button{border:0;border-radius:999px;padding:10px 18px;background:transparent;color:#010A0A;font:500 14px/1 inter,sans-serif;cursor:pointer}
+.tf-period button[aria-checked="true"]{background:#fff;box-shadow:0 1px 3px rgba(1,10,10,.12)}
+.tf-period button:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+.tf-save{color:#FF5B04;font-weight:600}
+.tf-plans-grid{display:grid;gap:20px;margin-top:28px;grid-template-columns:1fr}
+@media (min-width:750px){.tf-plans-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}}
+.tf-plans-msg{margin:0;font-size:16px;color:#3A4545}
+.tf-plans-msg a{color:#075056;font-weight:600;text-decoration:underline}
+.tf-plan{display:flex;flex-direction:column;background:#fff;border-radius:24px;padding:28px 26px 26px;box-shadow:0 1px 2px rgba(1,10,10,.06)}
+.tf-plan h3{margin:0;font-weight:600;font-size:22px}
+.tf-plan-desc{margin:6px 0 0;font-size:14px;line-height:1.45;color:#5B6666}
+.tf-price{margin:22px 0 0;display:flex;align-items:baseline;gap:6px}
+.tf-price b{font-weight:600;font-size:40px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tf-price span{font-size:15px;color:#5B6666}
+.tf-price-note{margin:4px 0 0;min-height:1.4em;font-size:13px;color:#5B6666}
+.tf-limits{list-style:none;margin:20px 0 0;padding:14px 0 0;border-top:1px solid #E6EBEB}
+.tf-limits li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:14px}
+.tf-limits b{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.tf-feat-t{margin:18px 0 0;font-weight:600;font-size:14px}
+.tf-feats{list-style:none;margin:8px 0 0;padding:0}
+.tf-feats li{position:relative;padding:4px 0 4px 22px;font-size:14px;line-height:1.4;color:#2A3333}
+.tf-feats li::before{content:"";position:absolute;left:2px;top:.62em;width:10px;height:6px;border-left:2px solid #FF5B04;border-bottom:2px solid #FF5B04;transform:rotate(-45deg)}
+.tf-more summary{margin-top:6px;cursor:pointer;font-size:14px;font-weight:500;color:#075056}
+.tf-plan-cta{display:flex;align-items:center;justify-content:center;height:48px;border-radius:999px;
+  background:linear-gradient(90deg,#FF5B04 0%,#E3520A 45%,#8A3608 100%);color:#fff;font:600 15px/1 inter,sans-serif;text-decoration:none}
+.tf-plan-cta-wrap{margin-top:auto;padding-top:24px}
+.tf-plan-cta:focus-visible{outline:2px solid #010A0A;outline-offset:2px}
+@media (max-width:749px){.tf-plans{padding:56px 20px 64px}}
+.tf-downloads{background:#fff;padding-top:72px}
+.tf-dl-grid{display:grid;gap:16px;margin-top:28px;grid-template-columns:1fr}
+@media (min-width:750px){.tf-dl-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1100px){.tf-dl-grid{grid-template-columns:repeat(4,1fr)}}
+.tf-dl{display:flex;flex-direction:column;border:1px solid #E6EBEB;border-radius:20px;padding:24px 22px 22px;background:#F6F6F6}
+.tf-dl-icon{width:40px;height:40px;color:#075056}
+.tf-dl h3{margin:14px 0 0;font-weight:600;font-size:20px}
+.tf-dl-meta{margin:4px 0 0;min-height:1.4em;font-size:13px;color:#5B6666;font-variant-numeric:tabular-nums}
+.tf-dl-hint{margin:12px 0 0;font-size:14px;line-height:1.45;color:#2A3333}
+.tf-dl-actions{margin-top:auto;padding-top:20px}
+.tf-dl-btn{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:999px;background:#010A0A;color:#fff;
+  font:600 15px/1 inter,sans-serif;text-decoration:none}
+.tf-dl-btn svg{width:18px;height:18px}
+.tf-dl-btn.is-web{background:transparent;color:#010A0A;border:1px solid #010A0A}
+.tf-dl-btn[aria-disabled="true"]{background:#E6EBEB;color:#5B6666;pointer-events:none}
+.tf-dl-btn:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+.tf-dl-alt{margin:8px 0 0;font-size:13px;color:#5B6666}
+.tf-dl-alt a{color:#075056;text-decoration:underline}
 '''
 
 # Desvíos deliberados respecto del Wix (ver CLAUDE.md > "Diferencias con Wix")
 WHATSAPP_URL = 'https://wa.me/5492926508200'
+# El sistema (front web de producción) y la API de la que la sección de planes lee los precios
+APP_URL = 'https://web.tefacturo.ar/'
+PLANS_API_URL = 'https://api.tefacturo.ar/api/public/plans'
+# Sección "Descargas": la última versión de cada plataforma sale del canal de actualización (público)
+RELEASES_API_URL = 'https://api.tefacturo.ar/api/app-releases/latest'
+DOWNLOADS = [
+    {'platform': 'android', 'arch': 'arm64-v8a', 'name': 'Android', 'icon': 'phone',
+     'hint': 'Para celulares, tablets y equipos POS. Android te va a pedir permiso para instalar apps de este origen.',
+     'alt': [{'arch': 'armeabi-v7a', 'label': 'Equipos de 32 bits'}]},
+    {'platform': 'windows', 'arch': 'x64', 'name': 'Windows', 'icon': 'desktop',
+     'hint': 'Para la computadora del mostrador o de la oficina.'},
+    {'platform': 'linux', 'arch': 'x86_64', 'name': 'Linux', 'icon': 'desktop',
+     'hint': 'AppImage: dale permiso de ejecución y abrila, sin instalar nada.'},
+]
+# Sección "Planes" (propia, no está en Wix): los precios se leen de PLANS_API_URL al cargar la página.
+# Funciones que no se anuncian aunque un plan las incluya (decisión del usuario, 2026-10-19: Mercado Pago
+# hasta validarlo con un comercio real) y los topes que se muestran en cada tarjeta, en orden.
+PLANS_HIDDEN_CAPABILITIES = ['cap.mercadopago.collections.enabled']
+PLANS_KEY_LIMITS = ['limit.users.max', 'limit.sales_points.max', 'meter.afip.invoices.authorized.count.month', 'limit.products.max']
+LOGIN_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '
+              'aria-hidden="true"><path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><path d="M10 17l5-5-5-5"/><path d="M15 12H4"/></svg>')
 PDF_NAME = 'Funcionalidades-Principales-TeFacturo.pdf'
 
 # Cifras de "Nuestra trayectoria", que repiten las páginas de contenido y la landing de anuncios
@@ -351,6 +441,65 @@ def feature_cards(dom):
 
 
 # ---------------------------------------------------------------- Limpieza del DOM
+def plans_section():
+    """Planes con sus precios. El HTML trae el título y el aviso de carga; site.js arma las tarjetas con
+    PLANS_API_URL. Sin JS o si la API no contesta, queda el link a WhatsApp."""
+    return '''<section id="planes" class="tf-plans" aria-labelledby="planes-t">
+<h2 id="planes-t">Planes</h2>
+<p class="tf-plans-lead">Elegí el plan para tu comercio. Sin costo por factura y sin permanencia.</p>
+<div class="tf-period" role="radiogroup" aria-label="Forma de pago" hidden>
+<button type="button" role="radio" aria-checked="true" data-period="monthly">Mensual</button>
+<button type="button" role="radio" aria-checked="false" data-period="annual">Anual <span class="tf-save"></span></button>
+</div>
+<div class="tf-plans-grid" aria-live="polite"><p class="tf-plans-msg">Cargando planes…</p></div>
+<noscript><p class="tf-plans-msg">Consultanos los planes por <a href="%s" rel="noopener">WhatsApp</a>.</p></noscript>
+</section>''' % WHATSAPP_URL
+
+
+DL_ICONS = {
+    'phone': '<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/>',
+    'desktop': '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M9 20h6M12 16v4"/>',
+    'web': '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
+}
+
+
+def dl_icon(name):
+    return ('<svg class="tf-dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">%s</svg>' % DL_ICONS[name])
+
+
+def downloads_section():
+    """Descargas. Una tarjeta por plataforma de DOWNLOADS más la web; site.js completa versión, tamaño y link
+    con RELEASES_API_URL. Sin JS (o si la plataforma no tiene versión publicada) el botón queda deshabilitado."""
+    cards = ''.join('''<article class="tf-dl" data-platform="%s" data-arch="%s">%s<h3>%s</h3><p class="tf-dl-meta"></p>
+<p class="tf-dl-hint">%s</p><div class="tf-dl-actions"><a class="tf-dl-btn" aria-disabled="true">Próximamente</a></div></article>'''
+                    % (d['platform'], d['arch'], dl_icon(d['icon']), html.escape(d['name']), html.escape(d['hint'])) for d in DOWNLOADS)
+    web = '''<article class="tf-dl">%s<h3>Web</h3><p class="tf-dl-meta">Siempre la última versión</p>
+<p class="tf-dl-hint">Desde el navegador de cualquier computadora, sin instalar nada.</p>
+<div class="tf-dl-actions"><a class="tf-dl-btn is-web" href="%s">Abrir TeFacturo web</a></div></article>''' % (dl_icon('web'), APP_URL)
+    return '''<section id="descargas" class="tf-plans tf-downloads" aria-labelledby="descargas-t">
+<h2 id="descargas-t">Descargá TeFacturo</h2>
+<p class="tf-plans-lead">Instalala en tu celular, tablet, equipo POS o computadora, o usala desde el navegador.</p>
+<div class="tf-dl-grid">%s%s</div>
+</section>''' % (cards, web)
+
+
+def insert_after_element(dom, start_pat, html_block):
+    """Inserta html_block justo después del elemento que abre en start_pat (mismo balanceo que remove_element)."""
+    m = re.search(start_pat, dom)
+    assert m, 'no encontré ' + start_pat
+    tag = re.match(r'<(\w[\w-]*)', m.group(0)).group(1)
+    depth = 0
+    for t in re.finditer(r'<(/?)%s\b[^>]*?(/?)>' % tag, dom[m.start():]):
+        if t.group(2):
+            continue
+        depth += -1 if t.group(1) else 1
+        if depth == 0:
+            end = m.start() + t.end()
+            return dom[:end] + html_block + dom[end:]
+    raise AssertionError('no encontré el cierre de ' + start_pat)
+
+
 def remove_element(dom, start_pat):
     """Borra el elemento que abre en start_pat (regex) con todo su contenido (balanceando <div>/<tag>)."""
     m = re.search(start_pat, dom)
@@ -512,7 +661,10 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 def runtime_config():
     t = json.loads((SRC / 'wix-features.json').read_text())['props']['triggersAndReactions']
     return {'triggers': t['compsToTriggers'], 'viewport': t['viewportTriggerCompsToParams'],
-            'repeaters': t['repeaterDescendantToRepeaterMapper'], 'anchors': ANCHORS}
+            'repeaters': t['repeaterDescendantToRepeaterMapper'], 'anchors': ANCHORS,
+            'downloads': {'api': RELEASES_API_URL, 'alt': {d['platform']: d.get('alt', []) for d in DOWNLOADS}},
+            'plans': {'api': PLANS_API_URL, 'whatsapp': WHATSAPP_URL, 'hidden': PLANS_HIDDEN_CAPABILITIES,
+                      'limits': PLANS_KEY_LIMITS}}
 
 
 def main():
@@ -526,6 +678,9 @@ def main():
     dom = rewrite_videos(dom)
     dom = rewrite_links(dom)
     dom = semantics(dom)
+    # "Ingresar" al sistema: en Wix no existía. site.js lo ubica al lado del botón del encabezado.
+    dom = insert_after_element(dom, r'<section id="comp-mpcom3xk"', plans_section() + downloads_section())
+    dom = re.sub(r'(<header id="comp-kbgakxea"[^>]*>)', r'\1<a class="tf-login" href="%s" title="Ingresar al sistema">%s<span>Ingresar</span></a>' % (APP_URL, LOGIN_ICON), dom, count=1)
     for a, b in TEXT_FIXES + TRAJECTORY + FAQ_FIXES:
         if a not in dom:
             print('  OJO: no encontré el texto a corregir:', a)
