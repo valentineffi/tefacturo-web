@@ -5,11 +5,12 @@ abrir WhatsApp. `noindex` y fuera del sitemap. Copy y fuentes de cada dato: src/
 
 Corre sola (`python3 tools/landing.py`) o desde build_site.py.
 """
-import glob, html, json, re
+import glob, html, json, re, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / 'src' / 'landing' / 'empezar.html'
+APP_SHOTS = ROOT / 'src' / 'landing' / 'app'   # capturas de la app (venta de homologación en el alpha, 2026-10-19)
 SLUG = 'empezar'
 
 # Medición: completar con los IDs del cliente. Vacíos = no se carga ningún script de terceros.
@@ -63,6 +64,10 @@ def build(out_dir, cfg):
     assert '{{' not in out, re.findall(r'\{\{\w+\}\}', out)
     (out_dir / SLUG).mkdir(parents=True, exist_ok=True)
     (out_dir / SLUG / 'index.html').write_text(out, encoding='utf-8')
+    # Capturas reales de la app que pasan en la pantalla del equipo (ver APP_SHOTS en COPY.md)
+    shots = out_dir / SLUG / 'app'
+    shutil.rmtree(shots, ignore_errors=True)
+    shutil.copytree(APP_SHOTS, shots)
     print('  landing: /%s/ (%d KB)' % (SLUG, len(out.encode()) // 1024))
 
 
