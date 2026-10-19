@@ -145,9 +145,39 @@ DOWNLOADS = [
      'hint': 'AppImage: dale permiso de ejecución y abrila, sin instalar nada.'},
 ]
 # Sección "Planes" (propia, no está en Wix): los precios se leen de PLANS_API_URL al cargar la página.
-# Funciones que no se anuncian aunque un plan las incluya (decisión del usuario, 2026-10-19: Mercado Pago
-# hasta validarlo con un comercio real) y los topes que se muestran en cada tarjeta, en orden.
-PLANS_HIDDEN_CAPABILITIES = ['cap.mercadopago.collections.enabled']
+# Funciones que se anuncian, en orden y con el nombre para el cliente (capability -> texto). Una capability que
+# no está acá no se muestra aunque el plan la incluya: una nueva del catálogo se suma a mano. Afuera a propósito
+# (2026-10-19): Mercado Pago (hasta validarlo con un comercio real), ventas sin factura, numeración reservada,
+# sincronización de inventario, cobros en la venta, configuración por dispositivo y acceso para asistentes IA
+# (técnicas o confusas para quien compra); la consulta ampliada de CUIT y el historial de costos van dentro de
+# la línea de su función principal.
+PLANS_FEATURES = [
+    ('cap.afip.wsfe_invoicing', 'Facturación electrónica A, B y C con CAE'),
+    ('cap.sales.create', 'Ventas rápidas con lector de código de barras'),
+    ('cap.arca.padron.a5', 'Datos del cliente desde ARCA con su CUIT'),
+    ('cap.current_accounts.enabled', 'Cuentas corrientes de clientes'),
+    ('cap.cash_registers.enabled', 'Cajas con apertura, cierre y movimientos'),
+    ('cap.payment_methods.enabled', 'Cobros con tarjeta, transferencia y cheque'),
+    ('cap.post_sale_payments.enabled', 'Cobros parciales y posteriores a la venta'),
+    ('cap.exchange_tickets.enabled', 'Tickets de cambio'),
+    ('cap.reports.enabled', 'Reportes de ventas, productos y caja'),
+    ('cap.products.global_catalog', 'Alta de productos por código de barras desde un catálogo'),
+    ('cap.products.bulk_price_update', 'Actualización masiva de precios'),
+    ('cap.purchase_scan.enabled', 'Carga de facturas de proveedor con una foto'),
+    ('cap.support.assistant', 'Asistente de ayuda que responde al instante'),
+    ('cap.tenant_assistant.data', 'Asistente con IA que consulta tus ventas, stock y cajas'),
+    ('cap.inventory.enabled', 'Stock por depósito, con lotes y números de serie'),
+    ('cap.presupuestos.enabled', 'Presupuestos'),
+    ('cap.remitos.enabled', 'Remitos'),
+    ('cap.purchases.enabled', 'Compras y proveedores'),
+    ('cap.price_lists.enabled', 'Listas de precios'),
+    ('cap.costs.enabled', 'Costos de productos, con su historial'),
+    ('cap.products.usd_costs', 'Costos en dólares con la cotización del día'),
+    ('cap.products.bulk_import', 'Importación de productos desde Excel'),
+    ('cap.exports.enabled', 'Exportación de listados a Excel'),
+    ('cap.products.audit', 'Historial de cambios en productos'),
+    ('cap.purchases.afip_validation', 'Validación de facturas de proveedores en ARCA'),
+]
 PLANS_KEY_LIMITS = ['limit.users.max', 'limit.sales_points.max', 'meter.afip.invoices.authorized.count.month', 'limit.products.max']
 LOGIN_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '
               'aria-hidden="true"><path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><path d="M10 17l5-5-5-5"/><path d="M15 12H4"/></svg>')
@@ -446,7 +476,7 @@ def plans_section():
     PLANS_API_URL. Sin JS o si la API no contesta, queda el link a WhatsApp."""
     return '''<section id="planes" class="tf-plans" aria-labelledby="planes-t">
 <h2 id="planes-t">Planes</h2>
-<p class="tf-plans-lead">Elegí el plan para tu comercio. Sin costo por factura y sin permanencia.</p>
+<p class="tf-plans-lead">Elegí el plan para tu comercio. Precios finales con impuestos incluidos, sin costo por factura y sin permanencia.</p>
 <div class="tf-period" role="radiogroup" aria-label="Forma de pago" hidden>
 <button type="button" role="radio" aria-checked="true" data-period="monthly">Mensual</button>
 <button type="button" role="radio" aria-checked="false" data-period="annual">Anual <span class="tf-save"></span></button>
@@ -663,7 +693,8 @@ def runtime_config():
     return {'triggers': t['compsToTriggers'], 'viewport': t['viewportTriggerCompsToParams'],
             'repeaters': t['repeaterDescendantToRepeaterMapper'], 'anchors': ANCHORS,
             'downloads': {'api': RELEASES_API_URL, 'alt': {d['platform']: d.get('alt', []) for d in DOWNLOADS}},
-            'plans': {'api': PLANS_API_URL, 'whatsapp': WHATSAPP_URL, 'hidden': PLANS_HIDDEN_CAPABILITIES,
+            'plans': {'api': PLANS_API_URL, 'whatsapp': WHATSAPP_URL,
+                      'features': [{'key': k, 'label': t} for k, t in PLANS_FEATURES],
                       'limits': PLANS_KEY_LIMITS}}
 
 

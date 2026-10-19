@@ -346,19 +346,18 @@
 
   function loadPlans(section, cfg) {
     var grid = $('.tf-plans-grid', section), toggle = $('.tf-period', section), period = 'monthly', plans = [];
-    var AREAS = ['facturacion', 'ventas', 'clientes', 'productos', 'inventario', 'cobros', 'compras', 'reportes', 'cuenta'];
     var VISIBLE = 6;
     function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
     function pesos(cents) { return '$ ' + Math.round(cents / 100).toLocaleString('es-AR'); }
     function fail() {
       grid.innerHTML = '<p class="tf-plans-msg">No pudimos cargar los planes. Consultanos por <a href="' + esc(cfg.whatsapp) + '" rel="noopener">WhatsApp</a>.</p>';
     }
+    // Sólo las de cfg.features, en ese orden y con ese nombre (PLANS_FEATURES en build_site.py)
     function features(plan) {
-      return plan.capabilities
-        .filter(function (c) { return cfg.hidden.indexOf(c.key) < 0; })
-        .sort(function (a, b) { return (AREAS.indexOf(a.area) - AREAS.indexOf(b.area)) || a.name.localeCompare(b.name, 'es'); });
+      var keys = plan.capabilities.map(function (c) { return c.key; });
+      return cfg.features.filter(function (f) { return keys.indexOf(f.key) >= 0; });
     }
-    function list(items) { return items.map(function (c) { return '<li title="' + esc(c.summary) + '">' + esc(c.name) + '</li>'; }).join(''); }
+    function list(items) { return items.map(function (f) { return '<li>' + esc(f.label) + '</li>'; }).join(''); }
     function card(plan, prev) {
       var p = plan.periods.filter(function (x) { return x.period === period; })[0] || plan.periods[0];
       var note = p.period === 'monthly' ? 'Pagando mes a mes' : pesos(p.priceCents) + ' por ' + (p.months === 12 ? 'año' : p.months + ' meses');
