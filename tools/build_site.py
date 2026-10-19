@@ -75,7 +75,9 @@ FEATURE_CSS = '''
 #descargas{grid-area:10/1/11/2}
 #comp-mo3g1cca{grid-area:11/1/12/2}
 #comp-lxu94j0k{grid-area:12/1/13/2}
-.tf-plans{background:#F6F6F6;color:#010A0A;font-family:inter,sans-serif;padding:72px 7.5vw 88px}
+/* El contenedor de secciones de Wix tiene pointer-events:none y sólo lo devuelve a sus propias secciones (por id):
+   sin esto, ningún botón de Planes ni de Descargas recibe el clic */
+.tf-plans{pointer-events:auto;background:#F6F6F6;color:#010A0A;font-family:inter,sans-serif;padding:72px 7.5vw 88px}
 .tf-plans h2{margin:0;color:#075056;font-weight:600;font-size:clamp(32px,3.7vw,52px);line-height:1.05;letter-spacing:-.01em}
 .tf-plans-lead{margin:16px 0 0;max-width:34em;font-size:clamp(15px,1.25vw,18px);line-height:1.5;color:#3A4545}
 .tf-period{display:inline-flex;gap:4px;margin-top:28px;padding:4px;border-radius:999px;background:#E6EBEB}
