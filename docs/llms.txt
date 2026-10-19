@@ -27,22 +27,22 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 
 ## Contacto
 
-- Web: https://valentineffi.github.io/tefacturo-web/
+- Web: https://tefacturo.ar/
 - WhatsApp: https://wa.me/5492926508200
 - Email: contacto@tefacturo.com.ar
 - Dirección: Mitre 1058, Coronel Suárez, Buenos Aires, Argentina
-- [Funcionalidades principales (PDF)](https://valentineffi.github.io/tefacturo-web/assets/docs/Funcionalidades-Principales-TeFacturo.pdf)
+- [Funcionalidades principales (PDF)](https://tefacturo.ar/assets/docs/Funcionalidades-Principales-TeFacturo.pdf)
 
 ## Guías y páginas
 
-- [Guías y recursos de facturación electrónica](https://valentineffi.github.io/tefacturo-web/recursos/): Guías prácticas sobre facturación electrónica con ARCA para comercios y monotributistas: tipos de factura, puntos de venta, notas de crédito y más.
-- [Sistema de facturación electrónica para tu comercio](https://valentineffi.github.io/tefacturo-web/sistema-facturacion-electronica/): Sistema de facturación electrónica simple para pymes y comercios de Argentina: Facturas A, B y C con CAE automático, equipo POS, reportes e impresión térmica.
-- [Facturación electrónica para monotributistas](https://valentineffi.github.io/tefacturo-web/facturacion-electronica-monotributo/): Emití Factura C como monotributista en segundos, con CAE automático de ARCA. Sin entrar a la web de ARCA en cada venta. Te ayudamos con el alta.
-- [Punto de venta POS con facturación electrónica incluida](https://valentineffi.github.io/tefacturo-web/punto-de-venta-pos/): Terminales POS, impresoras térmicas, tablets y kits con TeFacturo preinstalado: encendés el equipo y facturás con ARCA en segundos. Hardware, software y soporte.
-- [Facturación electrónica para kioscos, almacenes y comercios de barrio](https://valentineffi.github.io/tefacturo-web/facturacion-electronica-kioscos-almacenes/): Sistema de facturación para kioscos, almacenes y comercios de barrio: facturá a consumidor final en segundos, cargá productos por Excel e imprimí etiquetas de góndola.
-- [TeFacturo vs. Comprobantes en línea de ARCA](https://valentineffi.github.io/tefacturo-web/tefacturo-vs-comprobantes-en-linea/): ¿Facturar con Comprobantes en línea de ARCA o con un sistema? Comparamos velocidad, productos, impresión, reportes y soporte para que elijas qué te conviene.
-- [Facturación electrónica en Coronel Suárez](https://valentineffi.github.io/tefacturo-web/facturacion-electronica-coronel-suarez/): Sistema de facturación electrónica y equipos POS para comercios de Coronel Suárez y la zona. Estamos en Mitre 1058. Te ayudamos con ARCA y la puesta en marcha.
-- [Cómo hacer una Factura C en ARCA, paso a paso](https://valentineffi.github.io/tefacturo-web/como-hacer-factura-c/): Guía para monotributistas: cómo hacer una Factura C electrónica en ARCA con Comprobantes en línea, qué datos necesitás y cómo emitirla en segundos con un sistema.
-- [Factura A, B y C: cuál tenés que emitir](https://valentineffi.github.io/tefacturo-web/tipos-de-factura-a-b-c/): Factura A, B o C: cuál corresponde según tu condición frente al IVA y la de tu cliente. Tabla simple para responsables inscriptos, monotributistas y exentos.
-- [Cómo dar de alta un punto de venta en ARCA](https://valentineffi.github.io/tefacturo-web/alta-punto-de-venta-arca/): Paso a paso para crear un punto de venta en ARCA para factura electrónica: qué servicio usar, qué sistema elegir (web services o Comprobantes en línea) y errores comunes.
-- [Nota de crédito electrónica: cómo anular o corregir una factura](https://valentineffi.github.io/tefacturo-web/nota-de-credito-electronica/): Cómo anular una factura electrónica en ARCA: qué es la nota de crédito, cuándo emitirla, qué letra lleva y en qué se diferencia de la nota de débito.
+- [Guías y recursos de facturación electrónica](https://tefacturo.ar/recursos/): Guías prácticas sobre facturación electrónica con ARCA para comercios y monotributistas: tipos de factura, puntos de venta, notas de crédito y más.
+- [Sistema de facturación electrónica para tu comercio](https://tefacturo.ar/sistema-facturacion-electronica/): Sistema de facturación electrónica simple para pymes y comercios de Argentina: Facturas A, B y C con CAE automático, equipo POS, reportes e impresión térmica.
+- [Facturación electrónica para monotributistas](https://tefacturo.ar/facturacion-electronica-monotributo/): Emití Factura C como monotributista en segundos, con CAE automático de ARCA. Sin entrar a la web de ARCA en cada venta. Te ayudamos con el alta.
+- [Punto de venta POS con facturación electrónica incluida](https://tefacturo.ar/punto-de-venta-pos/): Terminales POS, impresoras térmicas, tablets y kits con TeFacturo preinstalado: encendés el equipo y facturás con ARCA en segundos. Hardware, software y soporte.
+- [Facturación electrónica para kioscos, almacenes y comercios de barrio](https://tefacturo.ar/facturacion-electronica-kioscos-almacenes/): Sistema de facturación para kioscos, almacenes y comercios de barrio: facturá a consumidor final en segundos, cargá productos por Excel e imprimí etiquetas de góndola.
+- [TeFacturo vs. Comprobantes en línea de ARCA](https://tefacturo.ar/tefacturo-vs-comprobantes-en-linea/): ¿Facturar con Comprobantes en línea de ARCA o con un sistema? Comparamos velocidad, productos, impresión, reportes y soporte para que elijas qué te conviene.
+- [Facturación electrónica en Coronel Suárez](https://tefacturo.ar/facturacion-electronica-coronel-suarez/): Sistema de facturación electrónica y equipos POS para comercios de Coronel Suárez y la zona. Estamos en Mitre 1058. Te ayudamos con ARCA y la puesta en marcha.
+- [Cómo hacer una Factura C en ARCA, paso a paso](https://tefacturo.ar/como-hacer-factura-c/): Guía para monotributistas: cómo hacer una Factura C electrónica en ARCA con Comprobantes en línea, qué datos necesitás y cómo emitirla en segundos con un sistema.
+- [Factura A, B y C: cuál tenés que emitir](https://tefacturo.ar/tipos-de-factura-a-b-c/): Factura A, B o C: cuál corresponde según tu condición frente al IVA y la de tu cliente. Tabla simple para responsables inscriptos, monotributistas y exentos.
+- [Cómo dar de alta un punto de venta en ARCA](https://tefacturo.ar/alta-punto-de-venta-arca/): Paso a paso para crear un punto de venta en ARCA para factura electrónica: qué servicio usar, qué sistema elegir (web services o Comprobantes en línea) y errores comunes.
+- [Nota de crédito electrónica: cómo anular o corregir una factura](https://tefacturo.ar/nota-de-credito-electronica/): Cómo anular una factura electrónica en ARCA: qué es la nota de crédito, cuándo emitirla, qué letra lleva y en qué se diferencia de la nota de débito.

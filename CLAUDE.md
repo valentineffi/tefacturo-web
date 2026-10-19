@@ -4,9 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Objetivo
 
-Réplica **pixel-perfect** (idéntica, no "parecida") del sitio de TeFacturo hecho en Wix Studio, publicada en GitHub Pages (`docs/`). Fuente de verdad: https://ailen4403.wixstudio.com/tfacturo (one-page). Más adelante pasa al dominio tefacturo.com.ar (cambiar `SITE_URL` en `tools/build_site.py` y agregar `docs/CNAME`).
+Réplica **pixel-perfect** (idéntica, no "parecida") del sitio de TeFacturo hecho en Wix Studio, publicada en GitHub Pages (`docs/`). Fuente de verdad: https://ailen4403.wixstudio.com/tfacturo (one-page). Desde 2026-10-19 se publica en **https://tefacturo.ar/** (`SITE_URL`), servido por el nginx del VPS de producción de TeFacturo desde `/var/www/landing` (ver «Publicar»); la copia de GitHub Pages sigue, con el canonical apuntando a tefacturo.ar. tefacturo.com.ar sigue unas semanas en el sitio viejo.
 
-Para contenido nuevo se puede leer https://tefacturo.com.ar/ (misión, qué hace), pero **siempre consultar con el usuario antes de agregar o cambiar contenido**.
+Para contenido nuevo se puede leer el sitio viejo en https://tefacturo.com.ar/ (misión, qué hace), pero **siempre consultar con el usuario antes de agregar o cambiar contenido**.
 
 ## Cómo funciona (pipeline)
 
@@ -35,9 +35,16 @@ node tools/compare_interactions.mjs   # hover tarjeta, tab FAQ, menú mobile, ho
 node tools/build_pdf.mjs              # regenerar el PDF de funcionalidades (CHROME=<ruta> para usar otro Chrome)
 python3 tools/diff_bands.py ref.png clone.png out.png 30 y0:y1 ...   # ver franjas concretas (ref|clon|diff)
 tools/build_logos.sh                  # regenerar brand/logos y brand/favicon desde el manual (pág. 7)
+tools/publish.sh                      # publicar docs/ en tefacturo.ar (rsync al VPS; ver «Publicar»)
 ```
 
 Estado de referencia de `compare.mjs`: misma altura en todos los anchos (30 px menos = banner de Wix eliminado; el footer de guías queda fuera de la comparación) y ~1,3–1,8 % de píxeles distintos, todo en bordes de imágenes rasterizadas (Wix sirve AVIF con unsharp mask) y frames de video. Si sube de eso, algo se rompió.
+
+## Publicar
+
+- **tefacturo.ar** lo sirve el nginx del VPS de producción de TeFacturo (`/etc/nginx/sites-available/tefacturo.ar`, raíz `/var/www/landing`, dueño `deploy`). `tools/publish.sh` hace el `rsync` de `docs/` y prueba que responda. Sin proxy a la API: planes y descargas los pide el navegador a `api.tefacturo.ar`.
+- Caché: HTML, CSS y JS con `no-cache` (no llevan hash en el nombre); `assets/img`, `assets/video` y `assets/fonts` 30 días. Si se cambia el contenido de una imagen manteniendo el nombre, renombrarla.
+- GitHub Pages sigue publicando `docs/` desde `main`, con el canonical apuntando a tefacturo.ar.
 
 ## Detalles que no son obvios
 

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC, OUT, CACHE = ROOT / 'source', ROOT / 'docs', ROOT / '.cache'
 A = OUT / 'assets'
 
-SITE_URL = 'https://valentineffi.github.io/tefacturo-web/'   # se ajusta al pasar a tefacturo.com.ar
+SITE_URL = 'https://tefacturo.ar/'   # dominio principal desde 2026-10-19 (tefacturo.com.ar sigue unas semanas en el sitio viejo)
 TITLE = 'TeFacturo | Sistema de facturación electrónica simple'
 DESCRIPTION = ('Sistema de facturación electrónica simple para pequeños y medianos comercios de Argentina: '
                'software fácil de usar y equipo POS para facturar con ARCA en segundos.')
