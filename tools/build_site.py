@@ -73,9 +73,15 @@ def site_cfg():
 
 
 # Cambios de contenido de "Nuestra trayectoria" aprobados por el usuario (2026-10-19): años contados desde
-# SINCE_YEAR, comercios activos reales y «Validado por ARCA» en lugar de «100 % Clientes satisfechos» (no medido)
+# SINCE_YEAR, comercios activos reales, y «3 Plataformas» y «Validado por ARCA» en lugar de «80 % Mayor eficiencia»
+# y «100 % Clientes satisfechos» (ninguno de los dos estaba medido)
 _NUM = '<span style="color:rgb(1, 10, 10);" class="wixui-rich-text__text"%s>%s</span>+'
 TRAJECTORY = [
+    ('<span class="wixui-rich-text__text">80<span class="color_12 wixui-rich-text__text">%</span></span>',
+     '<span class="wixui-rich-text__text">3</span>'),
+    ('<span class="wixui-rich-text__text">Mayor eficiencia</span>', '<span class="wixui-rich-text__text">Plataformas</span>'),
+    ('Reducí el tiempo de facturación y olvidate de los sistemas lentos o caídos.',
+     'Android, computadora y web: facturá desde el mostrador, la oficina o el celular.'),
     (_NUM % ('', '8'), _NUM % (' data-tf-since="%d"' % SINCE_YEAR, years_since())),
     (_NUM % ('', '60'), _NUM % ('', ACTIVE_COMMERCES)),
     ('<span class="wixui-rich-text__text">Clientes satisfechos</span>', '<span class="wixui-rich-text__text">Validado por ARCA</span>'),

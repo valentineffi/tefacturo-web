@@ -57,7 +57,7 @@ En Wix estos links no funcionan o son placeholders; acá se resolvieron así (co
 - PDF "Descubrí todas las funciones" se sirve local (`docs/assets/docs/`).
 - Íconos de WhatsApp/Instagram/Facebook del contacto: sin link (igual que en Wix) hasta tener las URLs.
 - Typos y un dato erróneo del Wix (FAQ: "uestro", ARCA ≠ "Administración Federal…", menú: "elegrinos") se corrigen en el build con `TEXT_FIXES` (aprobado por el usuario, 2026-10-13). Si el build avisa "no encontré el texto a corregir", el Wix cambió.
-- "Nuestra trayectoria" (`TRAJECTORY` en build_site.py, aprobado por el usuario, 2026-10-19): los años de experiencia se cuentan desde `SINCE_YEAR` (2018) y el runtime los lleva al año en curso (`data-tf-since`, también en las páginas y en `/empezar/`, con `{{YEARS}}`); los comercios activos salen de `ACTIVE_COMMERCES` (`{{ACTIVE}}` en páginas y landing), y «100 % Clientes satisfechos» (no medido) pasó a «100 % Validado por ARCA». `compare.mjs` va a marcar esa franja como distinta de la referencia: es a propósito.
+- "Nuestra trayectoria" (`TRAJECTORY` en build_site.py, aprobado por el usuario, 2026-10-19): los años de experiencia se cuentan desde `SINCE_YEAR` (2018) y el runtime los lleva al año en curso (`data-tf-since`, también en las páginas y en `/empezar/`, con `{{YEARS}}`); los comercios activos salen de `ACTIVE_COMMERCES` (`{{ACTIVE}}` en páginas y landing), «80 % Mayor eficiencia» y «100 % Clientes satisfechos» (no medidos) pasaron a «3 Plataformas» y «100 % Validado por ARCA». `compare.mjs` va a marcar esa franja como distinta de la referencia: es a propósito.
 
 ## Assets y marca
 
