@@ -36,12 +36,28 @@ ALTS = {
     '6cb375': 'Preguntas frecuentes', 'e89585': 'Aprendé sobre el sistema. Empezar es fácil',
     '4d8e0b': '¿Más dudas? Contactanos por WhatsApp', '506553': 'Quiero mi TeFacturo',
     'cccfaa': 'Descubrí todas las funciones del sistema',
-    'f172e0': 'Facturación electrónica', '9a64fe': 'Facturación electrónica AFIP/ARCA: emití Facturas A, B y C con CAE automático. Notas de crédito y débito.',
-    '7e6ec9': 'Gestión de productos', 'eba5b1': 'Gestión de productos: alta masiva por CSV/Excel. Variantes, categorías jerárquicas y departamentos con impuestos internos.',
-    '9af791': 'Reportes', '4da3fa': 'Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.',
-    '51305e': 'Impresión térmica y PDF', 'ef238a': 'Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola. Detección automática de impresoras en red.',
+    'f172e0': 'Facturación electrónica', '7e6ec9': 'Gestión de productos', '9af791': 'Reportes',
+    '51305e': 'Impresión térmica y PDF',
     '2b000d': 'WhatsApp', 'd9ad68': 'Instagram', 'e99f41': 'Facebook',
 }
+
+# Dorso de las tarjetas de "Funcionalidades" (id de la imagen de Wix -> título, texto). En Wix era una imagen con
+# el texto escrito; acá es texto (aprobado por el usuario, 2026-10-19: así se corrige sin rehacer imágenes y lo leen
+# los buscadores), con el fondo, la tipografía y las medidas de la imagen original de 746 px (FEATURE_CSS).
+FEATURE_CARDS = {
+    '9a64fe': ('Facturación electrónica ARCA (ex AFIP)', 'Emití Facturas A, B y C con CAE automático y notas de crédito.'),
+    'eba5b1': ('Gestión de productos', 'Alta masiva por CSV/Excel. Variantes, categorías jerárquicas y departamentos con impuestos internos.'),
+    '4da3fa': ('Reportes', 'KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.'),
+    'ef238a': ('Impresión térmica y PDF', 'Tickets de venta, notas de crédito, etiquetas de góndola. Detección automática de impresoras en red.'),
+}
+# Medidas en cqw del ancho de la tarjeta: 746 px -> letra de 51,1 px, interlineado de 64 px, texto desde (66, 96) px
+FEATURE_CSS = '''
+.tf-feat{container-type:inline-size;width:100%;aspect-ratio:1;background:#041212}
+.tf-feat-in{box-sizing:border-box;height:100%;padding:12.87cqw 8.85cqw 0;color:#fff;font-family:inter,sans-serif;font-size:6.85cqw;line-height:1.25}
+.tf-feat-in h3,.tf-feat-in p{margin:0;font:inherit;color:inherit;letter-spacing:normal}
+.tf-feat-in h3{font-weight:600}
+.tf-feat-in p{font-weight:300}
+'''
 
 # Desvíos deliberados respecto del Wix (ver CLAUDE.md > "Diferencias con Wix")
 WHATSAPP_URL = 'https://wa.me/5492926508200'
@@ -76,6 +92,19 @@ def site_cfg():
 # SINCE_YEAR, comercios activos reales, y «3 Plataformas» y «Validado por ARCA» en lugar de «80 % Mayor eficiencia»
 # y «100 % Clientes satisfechos» (ninguno de los dos estaba medido)
 _NUM = '<span style="color:rgb(1, 10, 10);" class="wixui-rich-text__text"%s>%s</span>+'
+# Preguntas frecuentes coherentes con lo que el sistema ofrece hoy (aprobado por el usuario, 2026-10-19): sin notas
+# de débito ni facturación de servicios (no están implementadas), sin Google Play (todavía no está publicada) y los
+# usuarios adicionales tienen costo
+FAQ_FIXES = [
+    ('Descargá la app desde Google Play en tu celular o tablet.', 'Instalá la app en tu celular o tablet.'),
+    ('(Facturas A, B, C, Notas de Crédito/Débito, etc.)', '(Facturas A, B y C y notas de crédito)'),
+    ('un kiosco, ferretería, tienda online o servicio profesional,', 'un kiosco, almacén, ferretería o tienda,'),
+    ('Sin costos por factura emitida, sin cargos por usuario adicional en el plan básico, y sin sorpresas. '
+     'Si necesitás funcionalidades avanzadas, te lo avisamos antes.',
+     'Sin costos por factura emitida y sin sorpresas. Si necesitás más usuarios o funcionalidades avanzadas, '
+     'tienen un costo adicional que te informamos antes de sumarlos.'),
+]
+
 TRAJECTORY = [
     ('<span class="wixui-rich-text__text">80<span class="color_12 wixui-rich-text__text">%</span></span>',
      '<span class="wixui-rich-text__text">3</span>'),
@@ -141,6 +170,7 @@ def build_css(dom):
 
     # Sin banner de Wix: el alto reservado pasa a 0
     css += '\n:root,:host,.spxThemeOverride{--wix-ads-height:0px!important;--sticky-offset:0px!important}\n'
+    css += FEATURE_CSS
     (A / 'css' / 'site.css').write_text(css)
     print('css', len(css) // 1024, 'KB,', len(fonts), 'fuentes')
 
@@ -308,6 +338,18 @@ def semantics(dom):
     return dom
 
 
+def feature_cards(dom):
+    """Cambia la imagen del dorso de cada tarjeta de FEATURE_CARDS por su texto (antes de procesar las imágenes,
+    así la imagen vieja ni se baja)."""
+    for media_id, (title, body) in FEATURE_CARDS.items():
+        pat = r'<wow-image\b(?:(?!</wow-image>).)*?63393a_%s(?:(?!</wow-image>).)*?</wow-image>' % media_id
+        card = '<div class="tf-feat"><div class="tf-feat-in"><h3>%s</h3><p>%s</p></div></div>' % (html.escape(title), html.escape(body))
+        dom, n = re.subn(pat, lambda m: card, dom, count=1, flags=re.S)
+        if not n:
+            print('  OJO: no encontré la tarjeta de funcionalidades', media_id)
+    return dom
+
+
 # ---------------------------------------------------------------- Limpieza del DOM
 def remove_element(dom, start_pat):
     """Borra el elemento que abre en start_pat (regex) con todo su contenido (balanceando <div>/<tag>)."""
@@ -363,7 +405,8 @@ def rewrite_links(dom):
     dom = re.sub(r'<a\b[^>]*href="%s"[^>]*>' % re.escape(page), anchor, dom)
     pdf = re.search(r'https://[0-9a-f-]+\.filesusr\.com/ugd/(63393a_[0-9a-f]+\.pdf)', dom)
     if pdf:
-        shutil.copy(fetch(pdf.group(0), CACHE / 'docs' / pdf.group(1)), A / 'docs' / PDF_NAME)
+        # El PDF ya no es el de Wix: lo genera tools/build_pdf.mjs desde src/pdf/ (contenido corregido, 2026-10-19)
+        shutil.copy(ROOT / 'src' / 'pdf' / PDF_NAME, A / 'docs' / PDF_NAME)
         dom = dom.replace(pdf.group(0), 'assets/docs/' + PDF_NAME)
     dom = dom.replace('href="https://web.whatsapp.com/"', 'href="%s"' % WHATSAPP_URL)
     return dom
@@ -416,7 +459,7 @@ def schema():
          'description': DESCRIPTION, 'publisher': {'@id': org}, 'inLanguage': 'es-AR',
          'featureList': [
              'Facturación electrónica ARCA (ex AFIP): Facturas A, B y C con CAE automático',
-             'Notas de crédito y débito',
+             'Notas de crédito',
              'Gestión de productos con alta masiva por CSV/Excel, variantes y categorías',
              'Reportes de ventas con KPIs y filtros por fecha, punto de venta, vendedor y cliente',
              'Impresión térmica y PDF: tickets, notas de crédito y etiquetas de góndola',
@@ -436,11 +479,11 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 
 ## Funcionalidades
 
-- Facturación electrónica ARCA: Facturas A, B y C con CAE automático; notas de crédito y débito.
+- Facturación electrónica ARCA: Facturas A, B y C con CAE automático y notas de crédito.
 - Gestión de productos: alta masiva por CSV/Excel, variantes, categorías jerárquicas y departamentos con impuestos internos.
 - Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.
 - Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola; detección automática de impresoras en red.
-- Aplicación nativa para Android (Google Play) y PC (Windows y Linux).
+- Aplicación nativa para Android y PC (Windows y Linux).
 - Equipos opcionales listos para usar: impresoras térmicas, terminales POS, tablets y kits completos, con el software ya instalado.
 
 ## Cómo empezar
@@ -473,11 +516,12 @@ def main():
     dom = (SRC / 'wix-dom.html').read_text(encoding='utf-8')
     build_css(dom)
     dom = clean(dom)
+    dom = feature_cards(dom)
     dom = Images().rewrite(dom)
     dom = rewrite_videos(dom)
     dom = rewrite_links(dom)
     dom = semantics(dom)
-    for a, b in TEXT_FIXES + TRAJECTORY:
+    for a, b in TEXT_FIXES + TRAJECTORY + FAQ_FIXES:
         if a not in dom:
             print('  OJO: no encontré el texto a corregir:', a)
         dom = dom.replace(a, b)

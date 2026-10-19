@@ -659,3 +659,9 @@ div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,
 /*  */
 #comp-moef8zej svg [data-color="1"] { fill: rgb(0, 0, 0); }
 :root,:host,.spxThemeOverride{--wix-ads-height:0px!important;--sticky-offset:0px!important}
+
+.tf-feat{container-type:inline-size;width:100%;aspect-ratio:1;background:#041212}
+.tf-feat-in{box-sizing:border-box;height:100%;padding:12.87cqw 8.85cqw 0;color:#fff;font-family:inter,sans-serif;font-size:6.85cqw;line-height:1.25}
+.tf-feat-in h3,.tf-feat-in p{margin:0;font:inherit;color:inherit;letter-spacing:normal}
+.tf-feat-in h3{font-weight:600}
+.tf-feat-in p{font-weight:300}

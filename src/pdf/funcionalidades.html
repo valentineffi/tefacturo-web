@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!-- Fuente del PDF "Funcionalidades principales" (docs/assets/docs/). Lo genera tools/build_pdf.mjs.
+     Réplica del original de Illustrator (mayo 2026) con el contenido corregido el 2026-10-19. Cada función que se
+     sume es un <section class="f"> más dentro de .grid: la grilla acomoda dos columnas sola. -->
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<title>Funcionalidades principales — TeFacturo</title>
+<style>
+/* {{FONTS}}: @font-face de Inter que inyecta build_pdf.mjs desde docs/assets/css/site.css */
+{{FONTS}}
+@page{size:A4;margin:0}
+*{box-sizing:border-box}
+html,body{margin:0;background:#EFF0EE}
+body{width:210mm;height:297mm;padding:44pt 73pt 0 69pt;font-family:inter,sans-serif;color:#090C0D;position:relative}
+.logo{position:absolute;top:59pt;right:76pt;width:35pt;height:auto}
+h1{margin:12pt 0 0;font-weight:400;font-size:21pt;letter-spacing:-.01em}
+.lead{margin:14pt 0 0;width:300pt;font-weight:200;font-size:11.4pt;line-height:14.4pt;color:#55595a}
+.grid{display:grid;grid-template-columns:191pt 192pt;column-gap:66pt;grid-auto-rows:103pt;margin:71pt 0 0 4pt}
+.f h2{margin:0;padding-bottom:4pt;border-bottom:.75pt solid #090C0D;font-weight:600;font-size:10.6pt}
+.f p{margin:12pt 0 0;font-weight:200;font-size:10.2pt;line-height:13.1pt;color:#55595a}
+</style>
+</head>
+<body>
+<svg class="logo" viewBox="865.781 619.590 145.781 147.281" aria-label="TeFacturo">{{LOGO}}</svg>
+<h1>Funcionalidades principales</h1>
+<p class="lead">En este documento, te presentamos nuestras funcionalidades principales, diseñadas para cubrir cada aspecto de tu operatoria diaria</p>
+<div class="grid">
+  <section class="f"><h2>Facturación electrónica ARCA</h2><p>Emití Facturas A, B y C con CAE automático y notas de crédito.</p></section>
+  <section class="f"><h2>Gestión de productos</h2><p>Alta masiva por CSV/Excel. Variantes, categorías jerárquicas y departamentos con impuestos internos.</p></section>
+  <section class="f"><h2>Punto de venta (POS)</h2><p>Ventas rápidas o asistidas. Escaneo de código de barras. Múltiples medios de pago por venta.</p></section>
+  <section class="f"><h2>Inventario y stock</h2><p>Depósitos múltiples, movimientos de entrada, salida y transferencia, seguimiento por lote y número de serie.</p></section>
+  <section class="f"><h2>Clientes</h2><p>Alta, historial de compras y consulta automática al Padrón de ARCA (alcances 5 y 13).</p></section>
+  <section class="f"><h2>Cajas</h2><p>Apertura y cierre, movimientos de ingresos y egresos, balance por caja.</p></section>
+  <section class="f"><h2>Reportes</h2><p>KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.</p></section>
+  <section class="f"><h2>Multiplataforma</h2><p>Disponible en Android, Web, Windows y Linux. Interfaz adaptada a móvil y escritorio.</p></section>
+  <section class="f"><h2>Impresión térmica y PDF</h2><p>Tickets de venta, notas de crédito, etiquetas de góndola. Detección automática de impresoras en red.</p></section>
+  <section class="f"><h2>Tickets de cambio</h2><p>Créditos de tienda con seguimiento de uso y vencimiento.</p></section>
+  <section class="f"><h2>Usuarios y permisos</h2><p>Perfiles de administrador, encargado, operador y lectura, con permisos por usuario y punto de venta.</p></section>
+  <section class="f"><h2>¿Dudas?</h2><p>Si tenés dudas, contactanos<br>por WhatsApp<br>+54 9 2926 508200</p></section>
+</div>
+</body>
+</html>

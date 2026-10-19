@@ -158,7 +158,7 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 |---|---|
 | 140+ comercios activos | El cliente: 141 comercios activos al 2026-10-19 (el Wix decía 60+). Reconfirmar antes de pautar. |
 | 8+ años de experiencia | El cliente: en el mercado desde 2018. El número se calcula al año en curso. |
-| Facturas A, B y C con CAE automático, notas de crédito y débito | PDF "Funcionalidades principales" |
+| Facturas A, B y C con CAE automático y notas de crédito (las de débito no están implementadas: se sacaron del sitio el 2026-10-19) | PDF "Funcionalidades principales" |
 | Alta masiva CSV/Excel, variantes, categorías | PDF |
 | Código de barras, varios medios de pago por venta | PDF ("Punto de venta (POS)") |
 | Impresión térmica, PDF, etiquetas de góndola | PDF |

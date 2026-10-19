@@ -8,11 +8,11 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 
 ## Funcionalidades
 
-- Facturación electrónica ARCA: Facturas A, B y C con CAE automático; notas de crédito y débito.
+- Facturación electrónica ARCA: Facturas A, B y C con CAE automático y notas de crédito.
 - Gestión de productos: alta masiva por CSV/Excel, variantes, categorías jerárquicas y departamentos con impuestos internos.
 - Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.
 - Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola; detección automática de impresoras en red.
-- Aplicación nativa para Android (Google Play) y PC (Windows y Linux).
+- Aplicación nativa para Android y PC (Windows y Linux).
 - Equipos opcionales listos para usar: impresoras térmicas, terminales POS, tablets y kits completos, con el software ya instalado.
 
 ## Cómo empezar

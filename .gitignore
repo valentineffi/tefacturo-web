@@ -4,3 +4,5 @@ __pycache__/
 # Material original del cliente: pesado (~150 MB) y privado
 /Assets/
 /brand/manual/
+# Temporal de tools/build_pdf.mjs
+src/pdf/.funcionalidades.tmp.html
