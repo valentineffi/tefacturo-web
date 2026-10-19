@@ -270,5 +270,10 @@
     $$('video').forEach(function (v) { v.muted = true; vio.observe(v); });
   }
 
+  /* ---------- años de experiencia: se cuentan hasta el año en curso (el build los deja con el año en que se generó) ---------- */
+  $$('[data-tf-since]').forEach(function (el) {
+    el.textContent = new Date().getFullYear() - Number(el.getAttribute('data-tf-since'));
+  });
+
   if (location.hash.length > 1) setTimeout(function () { scrollToId(location.hash.slice(1)); }, 50);
 })();

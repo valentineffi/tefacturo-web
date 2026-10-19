@@ -78,5 +78,7 @@
     </div>
   </div>
 </footer>
+<script>/* años de experiencia: se cuentan hasta el año en curso (el build los deja con el año en que se generó) */
+document.querySelectorAll('[data-tf-since]').forEach(function (el) { el.textContent = new Date().getFullYear() - Number(el.getAttribute('data-tf-since')); });</script>
 </body>
 </html>

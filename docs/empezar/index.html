@@ -223,7 +223,7 @@ a{color:inherit}
 .proof-img img{width:100%;height:100%;object-fit:cover;object-position:30% 40%}
 .nums{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:24px 12px 0}
 .num b{display:block;font-size:clamp(2.75rem,2.2rem + 2vw,3.75rem);font-weight:600;line-height:1;letter-spacing:-.04em}
-.num b span{color:var(--teal)}
+.num b span:not([data-tf-since]){color:var(--teal)}
 .num p{margin-top:8px;color:var(--muted);font-size:.9375rem;line-height:1.45}
 .where{margin:20px 12px 0;padding-top:18px;border-top:1px solid var(--line);font-size:.9375rem;color:var(--muted)}
 .where strong{display:block;color:var(--ink);font-weight:500}
@@ -416,8 +416,8 @@ a{color:inherit}
         <div class="team">
           <div class="proof-img"><img src="../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-800l.webp" srcset="../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-160l.webp 160w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-320l.webp 320w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-480l.webp 480w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-640l.webp 640w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-800l.webp 800w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-1024l.webp 1024w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-1280l.webp 1280w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-1600l.webp 1600w, ../assets/img/comerciante-emitiendo-una-factura-en-un-equipo-p-974e21-1792l.webp 1792w" sizes="(min-width: 1000px) 560px, calc(100vw - 32px)" width="1200" height="800" alt="Comerciante emitiendo una factura en un equipo POS TeFacturo" loading="lazy" decoding="async"></div>
           <div class="nums">
-            <div class="num"><b>60<span>+</span></b><p>comercios activos facturando con TeFacturo</p></div>
-            <div class="num"><b>8<span>+</span></b><p>años en el mercado</p></div>
+            <div class="num"><b>140<span>+</span></b><p>comercios activos facturando con TeFacturo</p></div>
+            <div class="num"><b><span data-tf-since="2018">8</span><span>+</span></b><p>años en el mercado</p></div>
           </div>
           <p class="where"><strong>Equipo propio en Coronel Suárez</strong>Mitre 1058. Soporte por WhatsApp, por mail y por chat dentro del sistema.</p>
         </div>
@@ -485,6 +485,8 @@ a{color:inherit}
 (function () {
   var WA = 'https://wa.me/5492926508200', REF = true;
   var q = new URLSearchParams(location.search), camp = q.get('utm_campaign');
+  // años de experiencia: se cuentan hasta el año en curso (el build los deja con el año en que se generó)
+  document.querySelectorAll('[data-tf-since]').forEach(function (el) { el.textContent = new Date().getFullYear() - Number(el.getAttribute('data-tf-since')); });
 
   function message(form) {
     var m = 'Hola, quiero mi TeFacturo.';

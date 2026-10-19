@@ -47,6 +47,10 @@ ALTS = {
 WHATSAPP_URL = 'https://wa.me/5492926508200'
 PDF_NAME = 'Funcionalidades-Principales-TeFacturo.pdf'
 
+# Cifras de "Nuestra trayectoria", que repiten las páginas de contenido y la landing de anuncios
+SINCE_YEAR = 2018        # los años de experiencia se cuentan desde acá; el runtime los lleva al año en curso
+ACTIVE_COMMERCES = 140   # «140+»: 141 comercios activos al 2026-10-19
+
 # Correcciones de texto aprobadas por el cliente (typos y un dato erróneo del Wix)
 TEXT_FIXES = [
     ('Sí, uestro sistema', 'Sí, nuestro sistema'),
@@ -55,6 +59,28 @@ TEXT_FIXES = [
     ('Solo necesitas completar un formulario con tus datos fiscales, Nosotros',
      'Solo necesitás completar un formulario con tus datos fiscales, nosotros'),
     ('Por qué elegrinos', 'Por qué elegirnos'),
+]
+
+
+def years_since():
+    return datetime.date.today().year - SINCE_YEAR
+
+
+def site_cfg():
+    """Config que reciben pages.py y landing.py. `years` lleva data-tf-since para que el runtime lo actualice."""
+    return {'site': SITE_URL, 'whatsapp': WHATSAPP_URL, 'active': str(ACTIVE_COMMERCES),
+            'years': '<span data-tf-since="%d">%d</span>' % (SINCE_YEAR, years_since())}
+
+
+# Cambios de contenido de "Nuestra trayectoria" aprobados por el usuario (2026-10-19): años contados desde
+# SINCE_YEAR, comercios activos reales y «Validado por ARCA» en lugar de «100 % Clientes satisfechos» (no medido)
+_NUM = '<span style="color:rgb(1, 10, 10);" class="wixui-rich-text__text"%s>%s</span>+'
+TRAJECTORY = [
+    (_NUM % ('', '8'), _NUM % (' data-tf-since="%d"' % SINCE_YEAR, years_since())),
+    (_NUM % ('', '60'), _NUM % ('', ACTIVE_COMMERCES)),
+    ('<span class="wixui-rich-text__text">Clientes satisfechos</span>', '<span class="wixui-rich-text__text">Validado por ARCA</span>'),
+    ('Comercios de todos los rubros ya confían en nuestro servicio</p>\n\n<p class="font_8 wixui-rich-text__text">y soporte.</p>',
+     'Cada comprobante sale con su CAE de ARCA, conectado directo al web service oficial.</p>'),
 ]
 
 
@@ -445,7 +471,7 @@ def main():
     dom = rewrite_videos(dom)
     dom = rewrite_links(dom)
     dom = semantics(dom)
-    for a, b in TEXT_FIXES:
+    for a, b in TEXT_FIXES + TRAJECTORY:
         if a not in dom:
             print('  OJO: no encontré el texto a corregir:', a)
         dom = dom.replace(a, b)
@@ -459,8 +485,8 @@ def main():
         shutil.copy(f, A / 'favicon' / f.name)
     (OUT / '.nojekyll').write_text('')
     (OUT / 'robots.txt').write_text('User-agent: *\nAllow: /\n\nSitemap: %ssitemap.xml\n' % SITE_URL)
-    extra = pages.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})
-    landing.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})  # noindex, fuera del sitemap
+    extra = pages.build(OUT, site_cfg())
+    landing.build(OUT, site_cfg())  # noindex, fuera del sitemap
     urls = [(SITE_URL, datetime.date.today().isoformat())] + [(u, d) for u, d, _, _ in extra]
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                                      + ''.join('  <url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % u for u in urls)

@@ -55,7 +55,8 @@ def build(out_dir, cfg):
     url = cfg['site'] + SLUG + '/'
     head, body = tracking()
     vals = {'URL': url, 'SITE': cfg['site'], 'WA': cfg['whatsapp'], 'WA_BASE': cfg['whatsapp'],
-            'WA_REF': json.dumps(WA_REF), 'PHOTO': photo(out_dir), 'TRACKING_HEAD': head, 'TRACKING_BODY': body}
+            'WA_REF': json.dumps(WA_REF), 'PHOTO': photo(out_dir), 'TRACKING_HEAD': head, 'TRACKING_BODY': body,
+            'YEARS': cfg['years'], 'ACTIVE': cfg['active']}
     out = SRC.read_text(encoding='utf-8')
     for k, v in vals.items():
         out = out.replace('{{%s}}' % k, v)
@@ -68,5 +69,5 @@ def build(out_dir, cfg):
 if __name__ == '__main__':
     import sys
     sys.path.insert(0, str(ROOT / 'tools'))
-    from build_site import SITE_URL, WHATSAPP_URL, OUT
-    build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})
+    from build_site import OUT, site_cfg
+    build(OUT, site_cfg())

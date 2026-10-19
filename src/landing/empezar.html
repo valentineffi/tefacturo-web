@@ -223,7 +223,7 @@ a{color:inherit}
 .proof-img img{width:100%;height:100%;object-fit:cover;object-position:30% 40%}
 .nums{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:24px 12px 0}
 .num b{display:block;font-size:clamp(2.75rem,2.2rem + 2vw,3.75rem);font-weight:600;line-height:1;letter-spacing:-.04em}
-.num b span{color:var(--teal)}
+.num b span:not([data-tf-since]){color:var(--teal)}
 .num p{margin-top:8px;color:var(--muted);font-size:.9375rem;line-height:1.45}
 .where{margin:20px 12px 0;padding-top:18px;border-top:1px solid var(--line);font-size:.9375rem;color:var(--muted)}
 .where strong{display:block;color:var(--ink);font-weight:500}
@@ -416,8 +416,8 @@ a{color:inherit}
         <div class="team">
           <div class="proof-img">{{PHOTO}}</div>
           <div class="nums">
-            <div class="num"><b>60<span>+</span></b><p>comercios activos facturando con TeFacturo</p></div>
-            <div class="num"><b>8<span>+</span></b><p>años en el mercado</p></div>
+            <div class="num"><b>{{ACTIVE}}<span>+</span></b><p>comercios activos facturando con TeFacturo</p></div>
+            <div class="num"><b>{{YEARS}}<span>+</span></b><p>años en el mercado</p></div>
           </div>
           <p class="where"><strong>Equipo propio en Coronel Suárez</strong>Mitre 1058. Soporte por WhatsApp, por mail y por chat dentro del sistema.</p>
         </div>
@@ -485,6 +485,8 @@ a{color:inherit}
 (function () {
   var WA = '{{WA_BASE}}', REF = {{WA_REF}};
   var q = new URLSearchParams(location.search), camp = q.get('utm_campaign');
+  // años de experiencia: se cuentan hasta el año en curso (el build los deja con el año en que se generó)
+  document.querySelectorAll('[data-tf-since]').forEach(function (el) { el.textContent = new Date().getFullYear() - Number(el.getAttribute('data-tf-since')); });
 
   function message(form) {
     var m = 'Hola, quiero mi TeFacturo.';

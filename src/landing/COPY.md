@@ -85,8 +85,8 @@ Para qué: bajar el miedo al trámite. Es la objeción más fuerte del que nunca
 
 Para qué: que hay un negocio real atrás. Solo datos que el cliente ya publica.
 
-- **60+ comercios activos** facturando con TeFacturo.
-- **8+ años** en el mercado.
+- **140+ comercios activos** facturando con TeFacturo (`ACTIVE_COMMERCES` en `tools/build_site.py`).
+- **8+ años** en el mercado (se cuentan desde 2018 al año en curso: `SINCE_YEAR`).
 - **Equipo propio en Coronel Suárez.** Mitre 1058. Soporte por WhatsApp, por mail y por chat dentro del sistema.
 - Foto: comerciante emitiendo en un equipo POS (de la home actual).
 - Sin testimonios hasta tenerlos con permiso escrito (pendiente 3).
@@ -133,7 +133,7 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 | Antes | Problema | Después |
 |---|---|---|
 | "80 % mayor eficiencia" | Sin fuente. "¿80 % de qué?" | Fuera. Se muestran los pasos de un lado y del otro. |
-| "100 % clientes satisfechos" | Nadie se lo cree. | Fuera. 60+ comercios, 8+ años, dirección real. |
+| "100 % clientes satisfechos" | Nadie se lo cree. | Fuera. 140+ comercios, 8+ años, dirección real. |
 | "Te damos de alta en ARCA" | Falso: lo hace el titular. | "Te guiamos en ARCA… lo hacés con tu Clave Fiscal, paso a paso con nosotros." |
 | "La página de ARCA se cae" | No lo podemos probar. | Se compara cantidad de pasos, que es verificable. |
 | "Más barato" | No hay precio público. | "Sin costo por factura. Te pasamos el precio por WhatsApp." |
@@ -156,8 +156,8 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 
 | Claim | Fuente |
 |---|---|
-| 60+ comercios activos | Home actual (Wix), sección "Nuestra trayectoria", publicado por el cliente. Reconfirmar antes de pautar. |
-| 8+ años de experiencia | Ídem. |
+| 140+ comercios activos | El cliente: 141 comercios activos al 2026-10-19 (el Wix decía 60+). Reconfirmar antes de pautar. |
+| 8+ años de experiencia | El cliente: en el mercado desde 2018. El número se calcula al año en curso. |
 | Facturas A, B y C con CAE automático, notas de crédito y débito | PDF "Funcionalidades principales" |
 | Alta masiva CSV/Excel, variantes, categorías | PDF |
 | Código de barras, varios medios de pago por venta | PDF ("Punto de venta (POS)") |
@@ -179,4 +179,4 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 3. **Testimonios**: pedir a 3 comercios, con esta pregunta: "¿Cómo facturabas antes de TeFacturo y qué cambió en el mostrador?", y permiso escrito para nombre, rubro y foto.
 4. ¿Agregamos la **referencia de campaña** (`utm_campaign`) al final del mensaje de WhatsApp para atribuir conversaciones? Está implementado; se apaga con `WA_REF = False` en `tools/landing.py`.
 5. **IDs de medición**: Meta Pixel y Google Tag (GA4/Ads). Sin eso, la página no reporta conversiones. Se configuran en `tools/landing.py` (`META_PIXEL_ID`, `GTAG_ID`).
-6. Reconfirmar **60+ comercios** y **8+ años** el día que arranca la pauta.
+6. Reconfirmar **140+ comercios** el día que arranca la pauta (los años se actualizan solos).

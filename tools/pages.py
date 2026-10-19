@@ -58,7 +58,8 @@ def render(p, all_pages, cfg, tpl, pre='../'):
     rel_html = ('<section class="related wrap" aria-labelledby="rel-t"><h2 id="rel-t">Seguí leyendo</h2>'
                 '<div class="cards">%s</div></section>' % ''.join(card(q, pre) for q in related)) if related else ''
     footer_links = ''.join('<li><a href="%s%s/">%s</a></li>' % (pre, q['slug'], html.escape(q['h1'])) for q in all_pages)
-    body = p['body'].replace('{{WHATSAPP}}', cfg['whatsapp']).replace('{{PRE}}', pre)
+    body = (p['body'].replace('{{WHATSAPP}}', cfg['whatsapp']).replace('{{PRE}}', pre)
+            .replace('{{YEARS}}', cfg['years']).replace('{{ACTIVE}}', cfg['active']))
     vals = {
         'TITLE': html.escape(p['title']), 'DESCRIPTION': html.escape(p['description']), 'URL': url,
         'OG_IMAGE': cfg['site'] + 'assets/img/og-image.png', 'PRE': pre, 'H1': html.escape(p['h1']),
