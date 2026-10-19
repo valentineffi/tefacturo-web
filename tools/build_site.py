@@ -461,6 +461,8 @@ def schema():
              'Facturación electrónica ARCA (ex AFIP): Facturas A, B y C con CAE automático',
              'Notas de crédito',
              'Gestión de productos con alta masiva por CSV/Excel, variantes y categorías',
+             'Cuentas corrientes: ventas a cuenta, cobros parciales y deudores',
+             'Presupuestos y remitos que pasan a venta sin volver a cargarlos',
              'Reportes de ventas con KPIs y filtros por fecha, punto de venta, vendedor y cliente',
              'Impresión térmica y PDF: tickets, notas de crédito y etiquetas de góndola',
              'Equipos POS, impresoras térmicas y tablets preconfigurados']},
@@ -481,6 +483,9 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 
 - Facturación electrónica ARCA: Facturas A, B y C con CAE automático y notas de crédito.
 - Gestión de productos: alta masiva por CSV/Excel, variantes, categorías jerárquicas y departamentos con impuestos internos.
+- Cuentas corrientes: ventas a cuenta, cobros parciales, listado de deudores y estado de cuenta de cada cliente.
+- Presupuestos: con el logo del comercio; al aceptarlo reserva el stock y pasa a venta o remito sin volver a cargarlo.
+- Remitos: reservan el stock y se facturan después, completos o en partes.
 - Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.
 - Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola; detección automática de impresoras en red.
 - Aplicación nativa para Android y PC (Windows y Linux).
