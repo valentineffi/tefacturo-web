@@ -70,6 +70,16 @@ FEATURE_CSS = '''
 .tf-login.is-compact span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .tf-login:hover{background:#010A0A;color:#fff}
 .tf-login:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+/* "Ingresar" pregunta a qué sistema: el nuevo o el anterior (LOGIN_TARGETS); va en el <body>, con position:fixed */
+.tf-login-menu{position:fixed;z-index:1000;width:280px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:8px;border-radius:16px;
+  background:#fff;box-shadow:0 8px 28px rgba(1,10,10,.18),0 1px 3px rgba(1,10,10,.08);font-family:inter,sans-serif;color:#010A0A}
+.tf-login-menu[hidden]{display:none}
+.tf-login-menu p{margin:6px 10px 6px;font-size:13px;color:#5B6666}
+.tf-login-menu a{display:block;padding:10px;border-radius:10px;color:inherit;text-decoration:none}
+.tf-login-menu a:hover,.tf-login-menu a:focus-visible{background:#F6F6F6;outline:none}
+.tf-login-menu a:focus-visible{box-shadow:inset 0 0 0 2px #FF5B04}
+.tf-login-menu b{display:block;font-weight:600;font-size:15px}
+.tf-login-menu span{display:block;margin-top:2px;font-size:13px;color:#5B6666}
 /* Planes y Descargas: filas 9 y 10 de la grilla de secciones; preguntas frecuentes y contacto bajan dos */
 #planes{grid-area:9/1/10/2}
 #descargas{grid-area:10/1/11/2}
@@ -138,6 +148,15 @@ FEATURE_CSS = '''
 WHATSAPP_URL = 'https://wa.me/5492926508200'
 # El sistema (front web de producción) y la API de la que la sección de planes lee los precios
 APP_URL = 'https://web.tefacturo.ar/'
+# "Ingresar" pregunta a cuál de los dos sistemas (decisión del usuario, 2026-10-20): los comercios que siguen en el
+# sistema anterior entran por la misma puerta mientras dura la migración. Sin JS el link va al nuevo (APP_URL).
+LOGIN_TARGETS = {
+    'title': '¿A qué sistema querés entrar?',
+    'options': [
+        {'url': APP_URL, 'name': 'TeFacturo nuevo', 'detail': 'web.tefacturo.ar'},
+        {'url': 'https://app.tefacturo.com.ar/', 'name': 'TeFacturo anterior', 'detail': 'app.tefacturo.com.ar'},
+    ],
+}
 PLANS_API_URL = 'https://api.tefacturo.ar/api/public/plans'
 # Sección "Descargas": la última versión de cada plataforma sale del canal de actualización (público)
 RELEASES_API_URL = 'https://api.tefacturo.ar/api/app-releases/latest'
@@ -717,6 +736,7 @@ def runtime_config():
     t = json.loads((SRC / 'wix-features.json').read_text())['props']['triggersAndReactions']
     return {'triggers': t['compsToTriggers'], 'viewport': t['viewportTriggerCompsToParams'],
             'repeaters': t['repeaterDescendantToRepeaterMapper'], 'anchors': ANCHORS,
+            'login': LOGIN_TARGETS,
             'downloads': {'api': RELEASES_API_URL, 'alt': {d['platform']: d.get('alt', []) for d in DOWNLOADS}},
             'plans': {'api': PLANS_API_URL, 'whatsapp': WHATSAPP_URL,
                       'features': [{'key': k, 'label': t} for k, t in PLANS_FEATURES],

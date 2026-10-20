@@ -340,6 +340,58 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeLogin);
   }
 
+  /* ---------- "Ingresar" pregunta a qué sistema: el nuevo o el anterior (CFG.login) ---------- */
+  if (login && CFG.login && CFG.login.options && CFG.login.options.length > 1) {
+    var loginMenu = document.createElement('div');
+    loginMenu.className = 'tf-login-menu';
+    loginMenu.id = 'tf-login-menu';
+    loginMenu.hidden = true;
+    var loginTitle = document.createElement('p');
+    loginTitle.textContent = CFG.login.title;
+    loginMenu.appendChild(loginTitle);
+    CFG.login.options.forEach(function (o) {
+      var a = document.createElement('a'), b = document.createElement('b'), d = document.createElement('span');
+      a.href = o.url;
+      b.textContent = o.name;
+      d.textContent = o.detail;
+      a.appendChild(b);
+      a.appendChild(d);
+      loginMenu.appendChild(a);
+    });
+    // En el <body>, fuera del DOM de Wix: así ningún contenedor del header lo recorta ni le cambia la referencia del fixed
+    document.body.appendChild(loginMenu);
+    login.setAttribute('aria-haspopup', 'true');
+    login.setAttribute('aria-expanded', 'false');
+    login.setAttribute('aria-controls', loginMenu.id);
+    var placeLoginMenu = function () {
+      var r = login.getBoundingClientRect(), w = loginMenu.offsetWidth, vw = root.clientWidth;
+      loginMenu.style.top = Math.round(r.bottom + 10) + 'px';
+      // Alineado al borde derecho del botón si no entra hacia la derecha (el ícono del celular está pegado al menú)
+      var left = r.left + w > vw - 16 ? r.right - w : r.left;
+      loginMenu.style.left = Math.round(Math.max(16, Math.min(left, vw - 16 - w))) + 'px';
+    };
+    var closeLoginMenu = function (focusBack) {
+      if (loginMenu.hidden) return;
+      if (focusBack) login.focus();  // antes de ocultarlo: con el foco adentro, ocultarlo lo manda al <body>
+      loginMenu.hidden = true;
+      login.setAttribute('aria-expanded', 'false');
+    };
+    login.addEventListener('click', function (e) {
+      e.preventDefault();
+      if (!loginMenu.hidden) { closeLoginMenu(false); return; }
+      loginMenu.hidden = false;
+      login.setAttribute('aria-expanded', 'true');
+      placeLoginMenu();
+      if (e.detail === 0) $('a', loginMenu).focus();  // abierto con el teclado: el foco pasa a la primera opción
+    });
+    document.addEventListener('click', function (e) {
+      if (!loginMenu.contains(e.target) && !login.contains(e.target)) closeLoginMenu(false);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeLoginMenu(true); });
+    window.addEventListener('resize', function () { if (!loginMenu.hidden) placeLoginMenu(); });
+    window.addEventListener('scroll', function () { if (!loginMenu.hidden) placeLoginMenu(); }, { passive: true });
+  }
+
   /* ---------- planes: precios de la API (GET /api/public/plans), no del HTML ---------- */
   var plansEl = document.getElementById('planes');
   if (plansEl && CFG.plans && window.fetch) loadPlans(plansEl, CFG.plans);
