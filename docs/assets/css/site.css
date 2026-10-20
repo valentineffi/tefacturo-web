@@ -736,3 +736,7 @@ div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,
 .tf-dl-btn:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
 .tf-dl-alt{margin:8px 0 0;font-size:13px;color:#5B6666}
 .tf-dl-alt a{color:#075056;text-decoration:underline}
+.tf-dl-more{margin:20px 0 0;font-size:13px;line-height:1.5;color:#5B6666}
+.tf-dl-more[hidden],.tf-dl-more a[hidden]{display:none}
+.tf-dl-more a{color:#075056;text-decoration:underline}
+.tf-dl-more a:not([hidden])~a:not([hidden])::before{content:"·";display:inline-block;margin:0 .5em;color:#5B6666}

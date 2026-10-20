@@ -419,13 +419,14 @@
   }
 
   /* ---------- descargas: la última versión publicada de cada plataforma (GET /api/app-releases/latest) ---------- */
+  function latestRelease(platform, arch) {
+    return fetch(CFG.downloads.api + '?platform=' + encodeURIComponent(platform) + '&arch=' + encodeURIComponent(arch), { credentials: 'omit' })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (body) { return body && body.data && body.data.release; });
+  }
   if (CFG.downloads && window.fetch) $$('#descargas .tf-dl[data-platform]').forEach(function (card) {
     var platform = card.getAttribute('data-platform');
-    function latest(arch) {
-      return fetch(CFG.downloads.api + '?platform=' + encodeURIComponent(platform) + '&arch=' + encodeURIComponent(arch), { credentials: 'omit' })
-        .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-        .then(function (body) { return body && body.data && body.data.release; });
-    }
+    function latest(arch) { return latestRelease(platform, arch); }
     latest(card.getAttribute('data-arch')).then(function (rel) {
       if (!rel || !rel.url) return;
       var btn = $('.tf-dl-btn', card);
@@ -448,6 +449,17 @@
           card.insertBefore(p, $('.tf-dl-actions', card));  // arriba del botón: los botones quedan alineados
         }).catch(function () {});
       });
+    }).catch(function () {});
+  });
+  // Enlaces de texto debajo de las tarjetas (el launcher): cada uno aparece sólo si tiene versión publicada
+  if (CFG.downloads && window.fetch) $$('#descargas .tf-dl-link[data-platform]').forEach(function (link) {
+    latestRelease(link.getAttribute('data-platform'), link.getAttribute('data-arch')).then(function (rel) {
+      if (!rel || !rel.url) return;
+      link.href = rel.url;
+      link.setAttribute('download', '');
+      link.title = 'Versión ' + rel.version + (rel.sizeBytes ? ' · ' + Math.round(rel.sizeBytes / 1048576) + ' MB' : '');
+      link.hidden = false;
+      link.parentNode.hidden = false;
     }).catch(function () {});
   });
 

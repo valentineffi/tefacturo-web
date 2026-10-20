@@ -128,6 +128,10 @@ FEATURE_CSS = '''
 .tf-dl-btn:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
 .tf-dl-alt{margin:8px 0 0;font-size:13px;color:#5B6666}
 .tf-dl-alt a{color:#075056;text-decoration:underline}
+.tf-dl-more{margin:20px 0 0;font-size:13px;line-height:1.5;color:#5B6666}
+.tf-dl-more[hidden],.tf-dl-more a[hidden]{display:none}
+.tf-dl-more a{color:#075056;text-decoration:underline}
+.tf-dl-more a:not([hidden])~a:not([hidden])::before{content:"·";display:inline-block;margin:0 .5em;color:#5B6666}
 '''
 
 # Desvíos deliberados respecto del Wix (ver CLAUDE.md > "Diferencias con Wix")
@@ -146,6 +150,16 @@ DOWNLOADS = [
     {'platform': 'linux', 'arch': 'x86_64', 'name': 'Linux', 'icon': 'desktop',
      'hint': 'AppImage: dale permiso de ejecución y abrila, sin instalar nada.'},
 ]
+# Debajo de las tarjetas, como enlaces de texto (decisión del usuario, 2026-10-20: sin tarjeta, con menos peso):
+# el launcher de las terminales POS. El guardián no va: lo instala el launcher completo.
+DOWNLOADS_MORE = {
+    'label': 'Launcher para terminales POS:',
+    'links': [
+        {'platform': 'android-launcher', 'arch': 'universal', 'label': 'completo'},
+        {'platform': 'android-launcher-liviano', 'arch': 'universal',
+         'label': 'liviano (equipos administrados por el fabricante)'},
+    ],
+}
 # Sección "Planes" (propia, no está en Wix): los precios se leen de PLANS_API_URL al cargar la página.
 # Funciones que se anuncian, en orden y con el nombre para el cliente (capability -> texto). Una capability que
 # no está acá no se muestra aunque el plan la incluya: una nueva del catálogo se suma a mano. Afuera a propósito
@@ -513,7 +527,16 @@ def downloads_section():
 <h2 id="descargas-t">Descargá TeFacturo</h2>
 <p class="tf-plans-lead">Instalala en tu celular, tablet, equipo POS o computadora, o usala desde el navegador.</p>
 <div class="tf-dl-grid">%s%s</div>
-</section>''' % (cards, web)
+%s
+</section>''' % (cards, web, downloads_more())
+
+
+def downloads_more():
+    """Enlaces de texto debajo de las tarjetas (DOWNLOADS_MORE). Ocultos hasta que site.js encuentra la versión
+    publicada de cada uno: sin ninguna, la línea entera no se muestra."""
+    links = ''.join('<a class="tf-dl-link" data-platform="%s" data-arch="%s" hidden>%s</a>'
+                    % (l['platform'], l['arch'], html.escape(l['label'])) for l in DOWNLOADS_MORE['links'])
+    return '<p class="tf-dl-more" hidden>%s %s</p>' % (html.escape(DOWNLOADS_MORE['label']), links)
 
 
 def insert_after_element(dom, start_pat, html_block):
