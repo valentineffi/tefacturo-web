@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SRC, OUT, CACHE = ROOT / 'source', ROOT / 'docs', ROOT / '.cache'
 A = OUT / 'assets'
 
-SITE_URL = 'https://valentineffi.github.io/tefacturo-web/'   # se ajusta al pasar a tefacturo.com.ar
+SITE_URL = 'https://tefacturo.ar/'   # dominio principal desde 2026-10-19 (tefacturo.com.ar sigue unas semanas en el sitio viejo)
 TITLE = 'TeFacturo | Sistema de facturación electrónica simple'
 DESCRIPTION = ('Sistema de facturación electrónica simple para pequeños y medianos comercios de Argentina: '
                'software fácil de usar y equipo POS para facturar con ARCA en segundos.')
@@ -36,16 +36,191 @@ ALTS = {
     '6cb375': 'Preguntas frecuentes', 'e89585': 'Aprendé sobre el sistema. Empezar es fácil',
     '4d8e0b': '¿Más dudas? Contactanos por WhatsApp', '506553': 'Quiero mi TeFacturo',
     'cccfaa': 'Descubrí todas las funciones del sistema',
-    'f172e0': 'Facturación electrónica', '9a64fe': 'Facturación electrónica AFIP/ARCA: emití Facturas A, B y C con CAE automático. Notas de crédito y débito.',
-    '7e6ec9': 'Gestión de productos', 'eba5b1': 'Gestión de productos: alta masiva por CSV/Excel. Variantes, categorías jerárquicas y departamentos con impuestos internos.',
-    '9af791': 'Reportes', '4da3fa': 'Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.',
-    '51305e': 'Impresión térmica y PDF', 'ef238a': 'Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola. Detección automática de impresoras en red.',
+    'f172e0': 'Facturación electrónica', '7e6ec9': 'Gestión de productos', '9af791': 'Reportes',
+    '51305e': 'Impresión térmica y PDF',
     '2b000d': 'WhatsApp', 'd9ad68': 'Instagram', 'e99f41': 'Facebook',
 }
 
+# Dorso de las tarjetas de "Funcionalidades" (id de la imagen de Wix -> título, texto). En Wix era una imagen con
+# el texto escrito; acá es texto (aprobado por el usuario, 2026-10-19: así se corrige sin rehacer imágenes y lo leen
+# los buscadores), con el fondo, la tipografía y las medidas de la imagen original de 746 px (FEATURE_CSS).
+FEATURE_CARDS = {
+    '9a64fe': ('Facturación electrónica ARCA (ex AFIP)', 'Emití Facturas A, B y C con CAE automático y notas de crédito.'),
+    'eba5b1': ('Gestión de productos', 'Alta masiva por CSV/Excel. Variantes, categorías jerárquicas y departamentos con impuestos internos.'),
+    '4da3fa': ('Reportes', 'KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.'),
+    'ef238a': ('Impresión térmica y PDF', 'Tickets de venta, notas de crédito, etiquetas de góndola. Detección automática de impresoras en red.'),
+}
+# Medidas en cqw del ancho de la tarjeta: 746 px -> letra de 51,1 px, interlineado de 64 px, texto desde (66, 96) px
+FEATURE_CSS = '''
+.tf-feat{container-type:inline-size;width:100%;aspect-ratio:1;background:#041212}
+.tf-feat-in{box-sizing:border-box;height:100%;padding:12.87cqw 8.85cqw 0;color:#fff;font-family:inter,sans-serif;font-size:6.85cqw;line-height:1.25}
+.tf-feat-in h3,.tf-feat-in p{margin:0;font:inherit;color:inherit;letter-spacing:normal}
+.tf-feat-in h3{font-weight:600}
+.tf-feat-in p{font-weight:300}
+.tf-login{position:absolute;z-index:3;top:50%;right:230px;transform:translateY(-50%);display:inline-flex;align-items:center;box-sizing:border-box;
+  height:46px;padding:0 1.5em;border:1px solid #010A0A;border-radius:999px;background:transparent;color:#010A0A;font:600 14px/1 inter,sans-serif;
+  text-decoration:none;white-space:nowrap;visibility:hidden;transition:background-color .2s,color .2s}
+.tf-login.is-placed{visibility:visible}
+.tf-login svg{width:1.25em;height:1.25em;margin-right:.5em;flex:none}
+.tf-login.is-text{height:auto;padding:0;border:0;border-radius:0;right:auto}
+.tf-login.is-text svg{width:1em;height:1em;margin-right:.4em}
+.tf-login.is-text:hover{background:transparent;color:#FF5B04!important}
+.tf-login.is-compact{width:var(--tf-login-h,46px);padding:0;justify-content:center}
+.tf-login.is-compact svg{margin:0}
+.tf-login.is-compact span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.tf-login:hover{background:#010A0A;color:#fff}
+.tf-login:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+/* "Ingresar" pregunta a qué sistema: el nuevo o el anterior (LOGIN_TARGETS); va en el <body>, con position:fixed */
+.tf-login-menu{position:fixed;z-index:1000;width:280px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:8px;border-radius:16px;
+  background:#fff;box-shadow:0 8px 28px rgba(1,10,10,.18),0 1px 3px rgba(1,10,10,.08);font-family:inter,sans-serif;color:#010A0A}
+.tf-login-menu[hidden]{display:none}
+.tf-login-menu p{margin:6px 10px 6px;font-size:13px;color:#5B6666}
+.tf-login-menu a{display:block;padding:10px;border-radius:10px;color:inherit;text-decoration:none}
+.tf-login-menu a:hover,.tf-login-menu a:focus-visible{background:#F6F6F6;outline:none}
+.tf-login-menu a:focus-visible{box-shadow:inset 0 0 0 2px #FF5B04}
+.tf-login-menu b{display:block;font-weight:600;font-size:15px}
+.tf-login-menu span{display:block;margin-top:2px;font-size:13px;color:#5B6666}
+/* Planes y Descargas: filas 9 y 10 de la grilla de secciones; preguntas frecuentes y contacto bajan dos */
+#planes{grid-area:9/1/10/2}
+#descargas{grid-area:10/1/11/2}
+#comp-mo3g1cca{grid-area:11/1/12/2}
+#comp-lxu94j0k{grid-area:12/1/13/2}
+/* El contenedor de secciones de Wix tiene pointer-events:none y sólo lo devuelve a sus propias secciones (por id):
+   sin esto, ningún botón de Planes ni de Descargas recibe el clic */
+.tf-plans{pointer-events:auto;background:#F6F6F6;color:#010A0A;font-family:inter,sans-serif;padding:72px 7.5vw 88px}
+.tf-plans h2{margin:0;color:#075056;font-weight:600;font-size:clamp(32px,3.7vw,52px);line-height:1.05;letter-spacing:-.01em}
+.tf-plans-lead{margin:16px 0 0;max-width:34em;font-size:clamp(15px,1.25vw,18px);line-height:1.5;color:#3A4545}
+.tf-period{display:inline-flex;gap:4px;margin-top:28px;padding:4px;border-radius:999px;background:#E6EBEB}
+.tf-period[hidden]{display:none}
+.tf-period button{border:0;border-radius:999px;padding:10px 18px;background:transparent;color:#010A0A;font:500 14px/1 inter,sans-serif;cursor:pointer}
+.tf-period button[aria-checked="true"]{background:#fff;box-shadow:0 1px 3px rgba(1,10,10,.12)}
+.tf-period button:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+.tf-save{color:#FF5B04;font-weight:600}
+.tf-plans-grid{display:grid;gap:20px;margin-top:28px;grid-template-columns:1fr}
+@media (min-width:750px){.tf-plans-grid{grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}}
+.tf-plans-msg{margin:0;font-size:16px;color:#3A4545}
+.tf-plans-msg a{color:#075056;font-weight:600;text-decoration:underline}
+.tf-plan{display:flex;flex-direction:column;background:#fff;border-radius:24px;padding:28px 26px 26px;box-shadow:0 1px 2px rgba(1,10,10,.06)}
+.tf-plan h3{margin:0;font-weight:600;font-size:22px}
+.tf-plan-desc{margin:6px 0 0;font-size:14px;line-height:1.45;color:#5B6666}
+.tf-price{margin:22px 0 0;display:flex;align-items:baseline;gap:6px}
+.tf-price b{font-weight:600;font-size:40px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.tf-price span{font-size:15px;color:#5B6666}
+.tf-price-note{margin:4px 0 0;min-height:1.4em;font-size:13px;color:#5B6666}
+.tf-limits{list-style:none;margin:20px 0 0;padding:14px 0 0;border-top:1px solid #E6EBEB}
+.tf-limits li{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:14px}
+.tf-limits b{font-weight:600;font-variant-numeric:tabular-nums;text-align:right}
+.tf-feat-t{margin:18px 0 0;font-weight:600;font-size:14px}
+.tf-feats{list-style:none;margin:8px 0 0;padding:0}
+.tf-feats li{position:relative;padding:4px 0 4px 22px;font-size:14px;line-height:1.4;color:#2A3333}
+.tf-feats li::before{content:"";position:absolute;left:2px;top:.62em;width:10px;height:6px;border-left:2px solid #FF5B04;border-bottom:2px solid #FF5B04;transform:rotate(-45deg)}
+.tf-more summary{margin-top:6px;cursor:pointer;font-size:14px;font-weight:500;color:#075056}
+.tf-plan-cta{display:flex;align-items:center;justify-content:center;height:48px;border-radius:999px;
+  background:linear-gradient(90deg,#FF5B04 0%,#E3520A 45%,#8A3608 100%);color:#fff;font:600 15px/1 inter,sans-serif;text-decoration:none}
+.tf-plan-cta-wrap{margin-top:auto;padding-top:24px}
+.tf-plan-cta:focus-visible{outline:2px solid #010A0A;outline-offset:2px}
+@media (max-width:749px){.tf-plans{padding:56px 20px 64px}}
+.tf-downloads{background:#fff;padding-top:72px}
+.tf-dl-grid{display:grid;gap:16px;margin-top:28px;grid-template-columns:1fr}
+@media (min-width:750px){.tf-dl-grid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1100px){.tf-dl-grid{grid-template-columns:repeat(4,1fr)}}
+.tf-dl{display:flex;flex-direction:column;border:1px solid #E6EBEB;border-radius:20px;padding:24px 22px 22px;background:#F6F6F6}
+.tf-dl-icon{width:40px;height:40px;color:#075056}
+.tf-dl h3{margin:14px 0 0;font-weight:600;font-size:20px}
+.tf-dl-meta{margin:4px 0 0;min-height:1.4em;font-size:13px;color:#5B6666;font-variant-numeric:tabular-nums}
+.tf-dl-hint{margin:12px 0 0;font-size:14px;line-height:1.45;color:#2A3333}
+.tf-dl-actions{margin-top:auto;padding-top:20px}
+.tf-dl-btn{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:999px;background:#010A0A;color:#fff;
+  font:600 15px/1 inter,sans-serif;text-decoration:none}
+.tf-dl-btn svg{width:18px;height:18px}
+.tf-dl-btn.is-web{background:transparent;color:#010A0A;border:1px solid #010A0A}
+.tf-dl-btn[aria-disabled="true"]{background:#E6EBEB;color:#5B6666;pointer-events:none}
+.tf-dl-btn:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+.tf-dl-alt{margin:8px 0 0;font-size:13px;color:#5B6666}
+.tf-dl-alt a{color:#075056;text-decoration:underline}
+.tf-dl-more{margin:20px 0 0;font-size:13px;line-height:1.5;color:#5B6666}
+.tf-dl-more[hidden],.tf-dl-more a[hidden]{display:none}
+.tf-dl-more a{color:#075056;text-decoration:underline}
+.tf-dl-more a:not([hidden])~a:not([hidden])::before{content:"·";display:inline-block;margin:0 .5em;color:#5B6666}
+'''
+
 # Desvíos deliberados respecto del Wix (ver CLAUDE.md > "Diferencias con Wix")
 WHATSAPP_URL = 'https://wa.me/5492926508200'
+# El sistema (front web de producción) y la API de la que la sección de planes lee los precios
+APP_URL = 'https://web.tefacturo.ar/'
+# "Ingresar" pregunta a cuál de los dos sistemas (decisión del usuario, 2026-10-20): los comercios que siguen en el
+# sistema anterior entran por la misma puerta mientras dura la migración. Sin JS el link va al nuevo (APP_URL).
+LOGIN_TARGETS = {
+    'title': '¿A qué sistema querés entrar?',
+    'options': [
+        {'url': APP_URL, 'name': 'TeFacturo nuevo', 'detail': 'web.tefacturo.ar'},
+        {'url': 'https://app.tefacturo.com.ar/', 'name': 'TeFacturo anterior', 'detail': 'app.tefacturo.com.ar'},
+    ],
+}
+PLANS_API_URL = 'https://api.tefacturo.ar/api/public/plans'
+# Sección "Descargas": la última versión de cada plataforma sale del canal de actualización (público)
+RELEASES_API_URL = 'https://api.tefacturo.ar/api/app-releases/latest'
+DOWNLOADS = [
+    {'platform': 'android', 'arch': 'arm64-v8a', 'name': 'Android', 'icon': 'phone',
+     'hint': 'Para celulares, tablets y equipos POS. Android te va a pedir permiso para instalar apps de este origen.',
+     'alt': [{'arch': 'armeabi-v7a', 'label': 'Equipos de 32 bits'}]},
+    {'platform': 'windows', 'arch': 'x64', 'name': 'Windows', 'icon': 'desktop',
+     'hint': 'Para la computadora del mostrador o de la oficina.'},
+    {'platform': 'linux', 'arch': 'x86_64', 'name': 'Linux', 'icon': 'desktop',
+     'hint': 'AppImage: dale permiso de ejecución y abrila, sin instalar nada.'},
+]
+# Debajo de las tarjetas, como enlaces de texto (decisión del usuario, 2026-10-20: sin tarjeta, con menos peso):
+# el launcher de las terminales POS. El guardián no va: lo instala el launcher completo.
+DOWNLOADS_MORE = {
+    'label': 'Launcher para terminales POS:',
+    'links': [
+        {'platform': 'android-launcher', 'arch': 'universal', 'label': 'completo'},
+        {'platform': 'android-launcher-liviano', 'arch': 'universal',
+         'label': 'liviano (equipos administrados por el fabricante)'},
+    ],
+}
+# Sección "Planes" (propia, no está en Wix): los precios se leen de PLANS_API_URL al cargar la página.
+# Funciones que se anuncian, en orden y con el nombre para el cliente (capability -> texto). Una capability que
+# no está acá no se muestra aunque el plan la incluya: una nueva del catálogo se suma a mano. Afuera a propósito
+# (2026-10-19): Mercado Pago (hasta validarlo con un comercio real), ventas sin factura, numeración reservada,
+# sincronización de inventario, cobros en la venta, configuración por dispositivo y acceso para asistentes IA
+# (técnicas o confusas para quien compra); la consulta ampliada de CUIT y el historial de costos van dentro de
+# la línea de su función principal.
+PLANS_FEATURES = [
+    ('cap.afip.wsfe_invoicing', 'Facturación electrónica A, B y C con CAE'),
+    ('cap.sales.create', 'Ventas rápidas con lector de código de barras'),
+    ('cap.arca.padron.a5', 'Datos del cliente desde ARCA con su CUIT'),
+    ('cap.current_accounts.enabled', 'Cuentas corrientes de clientes'),
+    ('cap.cash_registers.enabled', 'Cajas con apertura, cierre y movimientos'),
+    ('cap.payment_methods.enabled', 'Cobros con tarjeta, transferencia y cheque'),
+    ('cap.post_sale_payments.enabled', 'Cobros parciales y posteriores a la venta'),
+    ('cap.exchange_tickets.enabled', 'Tickets de cambio'),
+    ('cap.reports.enabled', 'Reportes de ventas, productos y caja'),
+    ('cap.products.global_catalog', 'Alta de productos por código de barras desde un catálogo'),
+    ('cap.products.bulk_price_update', 'Actualización masiva de precios'),
+    ('cap.purchase_scan.enabled', 'Carga de facturas de proveedor con una foto'),
+    ('cap.support.assistant', 'Asistente de ayuda que responde al instante'),
+    ('cap.tenant_assistant.data', 'Asistente con IA que consulta tus ventas, stock y cajas'),
+    ('cap.inventory.enabled', 'Stock por depósito, con lotes y números de serie'),
+    ('cap.presupuestos.enabled', 'Presupuestos'),
+    ('cap.remitos.enabled', 'Remitos'),
+    ('cap.purchases.enabled', 'Compras y proveedores'),
+    ('cap.price_lists.enabled', 'Listas de precios'),
+    ('cap.costs.enabled', 'Costos de productos, con su historial'),
+    ('cap.products.usd_costs', 'Costos en dólares con la cotización del día'),
+    ('cap.products.bulk_import', 'Importación de productos desde Excel'),
+    ('cap.exports.enabled', 'Exportación de listados a Excel'),
+    ('cap.products.audit', 'Historial de cambios en productos'),
+    ('cap.purchases.afip_validation', 'Validación de facturas de proveedores en ARCA'),
+]
+PLANS_KEY_LIMITS = ['limit.users.max', 'limit.sales_points.max', 'meter.afip.invoices.authorized.count.month', 'limit.products.max']
+LOGIN_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" '
+              'aria-hidden="true"><path d="M15 3h3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-3"/><path d="M10 17l5-5-5-5"/><path d="M15 12H4"/></svg>')
 PDF_NAME = 'Funcionalidades-Principales-TeFacturo.pdf'
+
+# Cifras de "Nuestra trayectoria", que repiten las páginas de contenido y la landing de anuncios
+SINCE_YEAR = 2018        # los años de experiencia se cuentan desde acá; el runtime los lleva al año en curso
+ACTIVE_COMMERCES = 140   # «140+»: 141 comercios activos al 2026-10-19
 
 # Correcciones de texto aprobadas por el cliente (typos y un dato erróneo del Wix)
 TEXT_FIXES = [
@@ -55,6 +230,47 @@ TEXT_FIXES = [
     ('Solo necesitas completar un formulario con tus datos fiscales, Nosotros',
      'Solo necesitás completar un formulario con tus datos fiscales, nosotros'),
     ('Por qué elegrinos', 'Por qué elegirnos'),
+]
+
+
+def years_since():
+    return datetime.date.today().year - SINCE_YEAR
+
+
+def site_cfg():
+    """Config que reciben pages.py y landing.py. `years` lleva data-tf-since para que el runtime lo actualice."""
+    return {'site': SITE_URL, 'whatsapp': WHATSAPP_URL, 'active': str(ACTIVE_COMMERCES),
+            'years': '<span data-tf-since="%d">%d</span>' % (SINCE_YEAR, years_since())}
+
+
+# Cambios de contenido de "Nuestra trayectoria" aprobados por el usuario (2026-10-19): años contados desde
+# SINCE_YEAR, comercios activos reales, y «3 Plataformas» y «Validado por ARCA» en lugar de «80 % Mayor eficiencia»
+# y «100 % Clientes satisfechos» (ninguno de los dos estaba medido)
+_NUM = '<span style="color:rgb(1, 10, 10);" class="wixui-rich-text__text"%s>%s</span>+'
+# Preguntas frecuentes coherentes con lo que el sistema ofrece hoy (aprobado por el usuario, 2026-10-19): sin notas
+# de débito ni facturación de servicios (no están implementadas), sin Google Play (todavía no está publicada) y los
+# usuarios adicionales tienen costo
+FAQ_FIXES = [
+    ('Descargá la app desde Google Play en tu celular o tablet.', 'Instalá la app en tu celular o tablet.'),
+    ('(Facturas A, B, C, Notas de Crédito/Débito, etc.)', '(Facturas A, B y C y notas de crédito)'),
+    ('un kiosco, ferretería, tienda online o servicio profesional,', 'un kiosco, almacén, ferretería o tienda,'),
+    ('Sin costos por factura emitida, sin cargos por usuario adicional en el plan básico, y sin sorpresas. '
+     'Si necesitás funcionalidades avanzadas, te lo avisamos antes.',
+     'Sin costos por factura emitida y sin sorpresas. Si necesitás más usuarios o funcionalidades avanzadas, '
+     'tienen un costo adicional que te informamos antes de sumarlos.'),
+]
+
+TRAJECTORY = [
+    ('<span class="wixui-rich-text__text">80<span class="color_12 wixui-rich-text__text">%</span></span>',
+     '<span class="wixui-rich-text__text">3</span>'),
+    ('<span class="wixui-rich-text__text">Mayor eficiencia</span>', '<span class="wixui-rich-text__text">Plataformas</span>'),
+    ('Reducí el tiempo de facturación y olvidate de los sistemas lentos o caídos.',
+     'Android, computadora y web: facturá desde el mostrador, la oficina o el celular.'),
+    (_NUM % ('', '8'), _NUM % (' data-tf-since="%d"' % SINCE_YEAR, years_since())),
+    (_NUM % ('', '60'), _NUM % ('', ACTIVE_COMMERCES)),
+    ('<span class="wixui-rich-text__text">Clientes satisfechos</span>', '<span class="wixui-rich-text__text">Validado por ARCA</span>'),
+    ('Comercios de todos los rubros ya confían en nuestro servicio</p>\n\n<p class="font_8 wixui-rich-text__text">y soporte.</p>',
+     'Cada comprobante sale con su CAE de ARCA, conectado directo al web service oficial.</p>'),
 ]
 
 
@@ -109,6 +325,7 @@ def build_css(dom):
 
     # Sin banner de Wix: el alto reservado pasa a 0
     css += '\n:root,:host,.spxThemeOverride{--wix-ads-height:0px!important;--sticky-offset:0px!important}\n'
+    css += FEATURE_CSS
     (A / 'css' / 'site.css').write_text(css)
     print('css', len(css) // 1024, 'KB,', len(fonts), 'fuentes')
 
@@ -276,7 +493,87 @@ def semantics(dom):
     return dom
 
 
+def feature_cards(dom):
+    """Cambia la imagen del dorso de cada tarjeta de FEATURE_CARDS por su texto (antes de procesar las imágenes,
+    así la imagen vieja ni se baja)."""
+    for media_id, (title, body) in FEATURE_CARDS.items():
+        pat = r'<wow-image\b(?:(?!</wow-image>).)*?63393a_%s(?:(?!</wow-image>).)*?</wow-image>' % media_id
+        card = '<div class="tf-feat"><div class="tf-feat-in"><h3>%s</h3><p>%s</p></div></div>' % (html.escape(title), html.escape(body))
+        dom, n = re.subn(pat, lambda m: card, dom, count=1, flags=re.S)
+        if not n:
+            print('  OJO: no encontré la tarjeta de funcionalidades', media_id)
+    return dom
+
+
 # ---------------------------------------------------------------- Limpieza del DOM
+def plans_section():
+    """Planes con sus precios. El HTML trae el título y el aviso de carga; site.js arma las tarjetas con
+    PLANS_API_URL. Sin JS o si la API no contesta, queda el link a WhatsApp."""
+    return '''<section id="planes" class="tf-plans" aria-labelledby="planes-t">
+<h2 id="planes-t">Planes</h2>
+<p class="tf-plans-lead">Elegí el plan para tu comercio. Precios finales con impuestos incluidos, sin costo por factura y sin permanencia.</p>
+<div class="tf-period" role="radiogroup" aria-label="Forma de pago" hidden>
+<button type="button" role="radio" aria-checked="true" data-period="monthly">Mensual</button>
+<button type="button" role="radio" aria-checked="false" data-period="annual">Anual <span class="tf-save"></span></button>
+</div>
+<div class="tf-plans-grid" aria-live="polite"><p class="tf-plans-msg">Cargando planes…</p></div>
+<noscript><p class="tf-plans-msg">Consultanos los planes por <a href="%s" rel="noopener">WhatsApp</a>.</p></noscript>
+</section>''' % WHATSAPP_URL
+
+
+DL_ICONS = {
+    'phone': '<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/>',
+    'desktop': '<rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M9 20h6M12 16v4"/>',
+    'web': '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/>',
+}
+
+
+def dl_icon(name):
+    return ('<svg class="tf-dl-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">%s</svg>' % DL_ICONS[name])
+
+
+def downloads_section():
+    """Descargas. Una tarjeta por plataforma de DOWNLOADS más la web; site.js completa versión, tamaño y link
+    con RELEASES_API_URL. Sin JS (o si la plataforma no tiene versión publicada) el botón queda deshabilitado."""
+    cards = ''.join('''<article class="tf-dl" data-platform="%s" data-arch="%s">%s<h3>%s</h3><p class="tf-dl-meta"></p>
+<p class="tf-dl-hint">%s</p><div class="tf-dl-actions"><a class="tf-dl-btn" aria-disabled="true">Próximamente</a></div></article>'''
+                    % (d['platform'], d['arch'], dl_icon(d['icon']), html.escape(d['name']), html.escape(d['hint'])) for d in DOWNLOADS)
+    web = '''<article class="tf-dl">%s<h3>Web</h3><p class="tf-dl-meta">Siempre la última versión</p>
+<p class="tf-dl-hint">Desde el navegador de cualquier computadora, sin instalar nada.</p>
+<div class="tf-dl-actions"><a class="tf-dl-btn is-web" href="%s">Abrir TeFacturo web</a></div></article>''' % (dl_icon('web'), APP_URL)
+    return '''<section id="descargas" class="tf-plans tf-downloads" aria-labelledby="descargas-t">
+<h2 id="descargas-t">Descargá TeFacturo</h2>
+<p class="tf-plans-lead">Instalala en tu celular, tablet, equipo POS o computadora, o usala desde el navegador.</p>
+<div class="tf-dl-grid">%s%s</div>
+%s
+</section>''' % (cards, web, downloads_more())
+
+
+def downloads_more():
+    """Enlaces de texto debajo de las tarjetas (DOWNLOADS_MORE). Ocultos hasta que site.js encuentra la versión
+    publicada de cada uno: sin ninguna, la línea entera no se muestra."""
+    links = ''.join('<a class="tf-dl-link" data-platform="%s" data-arch="%s" hidden>%s</a>'
+                    % (l['platform'], l['arch'], html.escape(l['label'])) for l in DOWNLOADS_MORE['links'])
+    return '<p class="tf-dl-more" hidden>%s %s</p>' % (html.escape(DOWNLOADS_MORE['label']), links)
+
+
+def insert_after_element(dom, start_pat, html_block):
+    """Inserta html_block justo después del elemento que abre en start_pat (mismo balanceo que remove_element)."""
+    m = re.search(start_pat, dom)
+    assert m, 'no encontré ' + start_pat
+    tag = re.match(r'<(\w[\w-]*)', m.group(0)).group(1)
+    depth = 0
+    for t in re.finditer(r'<(/?)%s\b[^>]*?(/?)>' % tag, dom[m.start():]):
+        if t.group(2):
+            continue
+        depth += -1 if t.group(1) else 1
+        if depth == 0:
+            end = m.start() + t.end()
+            return dom[:end] + html_block + dom[end:]
+    raise AssertionError('no encontré el cierre de ' + start_pat)
+
+
 def remove_element(dom, start_pat):
     """Borra el elemento que abre en start_pat (regex) con todo su contenido (balanceando <div>/<tag>)."""
     m = re.search(start_pat, dom)
@@ -331,7 +628,8 @@ def rewrite_links(dom):
     dom = re.sub(r'<a\b[^>]*href="%s"[^>]*>' % re.escape(page), anchor, dom)
     pdf = re.search(r'https://[0-9a-f-]+\.filesusr\.com/ugd/(63393a_[0-9a-f]+\.pdf)', dom)
     if pdf:
-        shutil.copy(fetch(pdf.group(0), CACHE / 'docs' / pdf.group(1)), A / 'docs' / PDF_NAME)
+        # El PDF ya no es el de Wix: lo genera tools/build_pdf.mjs desde src/pdf/ (contenido corregido, 2026-10-19)
+        shutil.copy(ROOT / 'src' / 'pdf' / PDF_NAME, A / 'docs' / PDF_NAME)
         dom = dom.replace(pdf.group(0), 'assets/docs/' + PDF_NAME)
     dom = dom.replace('href="https://web.whatsapp.com/"', 'href="%s"' % WHATSAPP_URL)
     return dom
@@ -384,8 +682,10 @@ def schema():
          'description': DESCRIPTION, 'publisher': {'@id': org}, 'inLanguage': 'es-AR',
          'featureList': [
              'Facturación electrónica ARCA (ex AFIP): Facturas A, B y C con CAE automático',
-             'Notas de crédito y débito',
+             'Notas de crédito',
              'Gestión de productos con alta masiva por CSV/Excel, variantes y categorías',
+             'Cuentas corrientes: ventas a cuenta, cobros parciales y deudores',
+             'Presupuestos y remitos que pasan a venta sin volver a cargarlos',
              'Reportes de ventas con KPIs y filtros por fecha, punto de venta, vendedor y cliente',
              'Impresión térmica y PDF: tickets, notas de crédito y etiquetas de góndola',
              'Equipos POS, impresoras térmicas y tablets preconfigurados']},
@@ -404,11 +704,14 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 
 ## Funcionalidades
 
-- Facturación electrónica ARCA: Facturas A, B y C con CAE automático; notas de crédito y débito.
+- Facturación electrónica ARCA: Facturas A, B y C con CAE automático y notas de crédito.
 - Gestión de productos: alta masiva por CSV/Excel, variantes, categorías jerárquicas y departamentos con impuestos internos.
+- Cuentas corrientes: ventas a cuenta, cobros parciales, listado de deudores y estado de cuenta de cada cliente.
+- Presupuestos: con el logo del comercio; al aceptarlo reserva el stock y pasa a venta o remito sin volver a cargarlo.
+- Remitos: reservan el stock y se facturan después, completos o en partes.
 - Reportes: KPIs de ventas, gráficos de tendencias, filtros por fecha, punto de venta, vendedor y cliente.
 - Impresión térmica y PDF: tickets de venta, notas de crédito, etiquetas de góndola; detección automática de impresoras en red.
-- Aplicación nativa para Android (Google Play) y PC (Windows y Linux).
+- Aplicación nativa para Android y PC (Windows y Linux).
 - Equipos opcionales listos para usar: impresoras térmicas, terminales POS, tablets y kits completos, con el software ya instalado.
 
 ## Cómo empezar
@@ -432,7 +735,12 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 def runtime_config():
     t = json.loads((SRC / 'wix-features.json').read_text())['props']['triggersAndReactions']
     return {'triggers': t['compsToTriggers'], 'viewport': t['viewportTriggerCompsToParams'],
-            'repeaters': t['repeaterDescendantToRepeaterMapper'], 'anchors': ANCHORS}
+            'repeaters': t['repeaterDescendantToRepeaterMapper'], 'anchors': ANCHORS,
+            'login': LOGIN_TARGETS,
+            'downloads': {'api': RELEASES_API_URL, 'alt': {d['platform']: d.get('alt', []) for d in DOWNLOADS}},
+            'plans': {'api': PLANS_API_URL, 'whatsapp': WHATSAPP_URL,
+                      'features': [{'key': k, 'label': t} for k, t in PLANS_FEATURES],
+                      'limits': PLANS_KEY_LIMITS}}
 
 
 def main():
@@ -441,11 +749,15 @@ def main():
     dom = (SRC / 'wix-dom.html').read_text(encoding='utf-8')
     build_css(dom)
     dom = clean(dom)
+    dom = feature_cards(dom)
     dom = Images().rewrite(dom)
     dom = rewrite_videos(dom)
     dom = rewrite_links(dom)
     dom = semantics(dom)
-    for a, b in TEXT_FIXES:
+    # "Ingresar" al sistema: en Wix no existía. site.js lo ubica al lado del botón del encabezado.
+    dom = insert_after_element(dom, r'<section id="comp-mpcom3xk"', plans_section() + downloads_section())
+    dom = re.sub(r'(<header id="comp-kbgakxea"[^>]*>)', r'\1<a class="tf-login" href="%s" title="Ingresar al sistema">%s<span>Ingresar</span></a>' % (APP_URL, LOGIN_ICON), dom, count=1)
+    for a, b in TEXT_FIXES + TRAJECTORY + FAQ_FIXES:
         if a not in dom:
             print('  OJO: no encontré el texto a corregir:', a)
         dom = dom.replace(a, b)
@@ -459,8 +771,8 @@ def main():
         shutil.copy(f, A / 'favicon' / f.name)
     (OUT / '.nojekyll').write_text('')
     (OUT / 'robots.txt').write_text('User-agent: *\nAllow: /\n\nSitemap: %ssitemap.xml\n' % SITE_URL)
-    extra = pages.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})
-    landing.build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})  # noindex, fuera del sitemap
+    extra = pages.build(OUT, site_cfg())
+    landing.build(OUT, site_cfg())  # noindex, fuera del sitemap
     urls = [(SITE_URL, datetime.date.today().isoformat())] + [(u, d) for u, d, _, _ in extra]
     (OUT / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
                                      + ''.join('  <url><loc>%s</loc><lastmod>%s</lastmod></url>\n' % u for u in urls)

@@ -6,14 +6,14 @@
 <title>Punto de venta POS con facturación electrónica | TeFacturo</title>
 <meta name="description" content="Terminales POS, impresoras térmicas, tablets y kits con TeFacturo preinstalado: encendés el equipo y facturás con ARCA en segundos. Hardware, software y soporte.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://valentineffi.github.io/tefacturo-web/punto-de-venta-pos/">
+<link rel="canonical" href="https://tefacturo.ar/punto-de-venta-pos/">
 <meta property="og:type" content="article">
 <meta property="og:locale" content="es_AR">
 <meta property="og:site_name" content="TeFacturo">
 <meta property="og:title" content="Punto de venta POS con facturación electrónica | TeFacturo">
 <meta property="og:description" content="Terminales POS, impresoras térmicas, tablets y kits con TeFacturo preinstalado: encendés el equipo y facturás con ARCA en segundos. Hardware, software y soporte.">
-<meta property="og:url" content="https://valentineffi.github.io/tefacturo-web/punto-de-venta-pos/">
-<meta property="og:image" content="https://valentineffi.github.io/tefacturo-web/assets/img/og-image.png">
+<meta property="og:url" content="https://tefacturo.ar/punto-de-venta-pos/">
+<meta property="og:image" content="https://tefacturo.ar/assets/img/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -24,7 +24,7 @@
 <link rel="preload" href="../assets/fonts/5571db152c57bebf.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../assets/css/pages.css">
 <style>@font-face{font-family:"Inter";font-style:normal;font-weight:100 900;font-display:swap;src:url("../assets/fonts/5571db152c57bebf.woff2") format("woff2")}</style>
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://valentineffi.github.io/tefacturo-web/"}, {"@type": "ListItem", "position": 2, "name": "Recursos", "item": "https://valentineffi.github.io/tefacturo-web/recursos/"}, {"@type": "ListItem", "position": 3, "name": "Punto de venta POS con facturación electrónica incluida", "item": "https://valentineffi.github.io/tefacturo-web/punto-de-venta-pos/"}]}, {"@type": "WebPage", "@id": "https://valentineffi.github.io/tefacturo-web/punto-de-venta-pos/#main", "url": "https://valentineffi.github.io/tefacturo-web/punto-de-venta-pos/", "name": "Punto de venta POS con facturación electrónica | TeFacturo", "headline": "Punto de venta POS con facturación electrónica incluida", "description": "Terminales POS, impresoras térmicas, tablets y kits con TeFacturo preinstalado: encendés el equipo y facturás con ARCA en segundos. Hardware, software y soporte.", "inLanguage": "es-AR", "isPartOf": {"@id": "https://valentineffi.github.io/tefacturo-web/#website"}, "publisher": {"@id": "https://valentineffi.github.io/tefacturo-web/#organization"}, "image": "https://valentineffi.github.io/tefacturo-web/assets/img/og-image.png"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://tefacturo.ar/"}, {"@type": "ListItem", "position": 2, "name": "Recursos", "item": "https://tefacturo.ar/recursos/"}, {"@type": "ListItem", "position": 3, "name": "Punto de venta POS con facturación electrónica incluida", "item": "https://tefacturo.ar/punto-de-venta-pos/"}]}, {"@type": "WebPage", "@id": "https://tefacturo.ar/punto-de-venta-pos/#main", "url": "https://tefacturo.ar/punto-de-venta-pos/", "name": "Punto de venta POS con facturación electrónica | TeFacturo", "headline": "Punto de venta POS con facturación electrónica incluida", "description": "Terminales POS, impresoras térmicas, tablets y kits con TeFacturo preinstalado: encendés el equipo y facturás con ARCA en segundos. Hardware, software y soporte.", "inLanguage": "es-AR", "isPartOf": {"@id": "https://tefacturo.ar/#website"}, "publisher": {"@id": "https://tefacturo.ar/#organization"}, "image": "https://tefacturo.ar/assets/img/og-image.png"}]}</script>
 </head>
 <body>
 <a class="skip" href="#contenido">Ir al contenido</a>
@@ -76,8 +76,10 @@
 
 <h2>Lo que hace el sistema</h2>
 <ul>
-  <li>Facturas A, B y C con CAE automático, y notas de crédito y débito.</li>
+  <li>Facturas A, B y C con CAE automático, y notas de crédito.</li>
   <li>Productos con alta masiva por CSV o Excel, variantes y categorías.</li>
+  <li>Cuentas corrientes: ventas a cuenta, cobros parciales y deudores.</li>
+  <li>Presupuestos y remitos que pasan a venta sin volver a cargarlos.</li>
   <li>Reportes de ventas por fecha, punto de venta, vendedor y cliente.</li>
   <li>Impresión térmica y PDF.</li>
 </ul>
@@ -114,5 +116,7 @@
     </div>
   </div>
 </footer>
+<script>/* años de experiencia: se cuentan hasta el año en curso (el build los deja con el año en que se generó) */
+document.querySelectorAll('[data-tf-since]').forEach(function (el) { el.textContent = new Date().getFullYear() - Number(el.getAttribute('data-tf-since')); });</script>
 </body>
 </html>

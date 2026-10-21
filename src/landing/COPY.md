@@ -16,7 +16,7 @@ Fuera de alcance: profesionales que emiten pocas facturas por mes (les alcanza C
 - **"Ahorro de más del 60 % frente a una ticketeadora fiscal"** (tefacturo.com.ar, 2019): dato viejo y sin base actual. Fuera.
 - **No hay precio público.** La skill pide sección de precio; acá se reemplaza por lo que sí se puede afirmar del FAQ del sitio: plan mensual o anual, sin costo por factura, sin permanencia. El precio se da por WhatsApp.
 - **"Te damos de alta en ARCA"** es falso: el trámite lo hace el titular del CUIT con su Clave Fiscal. Se dice "te guiamos en ARCA".
-- **La pantalla del equipo en el fold es una recreación** con funciones reales del PDF (CAE automático, varios medios de pago, ticket térmico). No son capturas de la app. Ver pendiente 1.
+- **La pantalla del equipo en el fold son capturas reales de la app** (desde 2026-10-19, pendiente 1 resuelto): una venta de homologación en el alpha con productos ficticios sin marca (Yerba mate 1 kg, Leche entera 1 l, Galletitas surtidas 400 g), cobrada en efectivo y autorizada como Factura B 0001-00000244. Las imágenes están en `src/landing/app/`; si la pantalla de venta cambia, hay que volver a sacarlas. El ticket que sale es HTML con el formato y los datos del ticket térmico real de esa venta, sin los datos del emisor (nombre, CUIT, domicilio). Sin marcas de terceros ni el botón QR: Mercado Pago no se anuncia hasta validarlo con un comercio real.
 
 ## 0. Header
 
@@ -36,7 +36,7 @@ Para qué: en 5 segundos, en el celular, entender qué es (sistema + equipo para
 - **CTA:** Quiero mi TeFacturo
 - **Debajo del CTA:** Te respondemos por WhatsApp.
 - **Línea de confianza:** Facturas A, B y C con CAE · Sin costo por factura · Sin permanencia
-- **Visual:** un equipo POS recreado que hace una venta real en ~10 s: suma productos, elige medio de pago, emite, pide el CAE a ARCA y sale el ticket impreso.
+- **Visual:** un equipo POS con la app real que hace una venta en ~10 s (6 capturas): venta vacía, carrito, cobro, resumen, emitiendo, «Factura autorizada por ARCA», y sale el ticket impreso.
 
 Riesgo: "en segundos" es una promesa de velocidad. Está en el sitio actual ("facturar en segundos") pero no está medida. Variante a testear si el cliente no la puede sostener: "Facturá con el cliente adelante."
 
@@ -85,8 +85,8 @@ Para qué: bajar el miedo al trámite. Es la objeción más fuerte del que nunca
 
 Para qué: que hay un negocio real atrás. Solo datos que el cliente ya publica.
 
-- **60+ comercios activos** facturando con TeFacturo.
-- **8+ años** en el mercado.
+- **140+ comercios activos** facturando con TeFacturo (`ACTIVE_COMMERCES` en `tools/build_site.py`).
+- **8+ años** en el mercado (se cuentan desde 2018 al año en curso: `SINCE_YEAR`).
 - **Equipo propio en Coronel Suárez.** Mitre 1058. Soporte por WhatsApp, por mail y por chat dentro del sistema.
 - Foto: comerciante emitiendo en un equipo POS (de la home actual).
 - Sin testimonios hasta tenerlos con permiso escrito (pendiente 3).
@@ -133,7 +133,7 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 | Antes | Problema | Después |
 |---|---|---|
 | "80 % mayor eficiencia" | Sin fuente. "¿80 % de qué?" | Fuera. Se muestran los pasos de un lado y del otro. |
-| "100 % clientes satisfechos" | Nadie se lo cree. | Fuera. 60+ comercios, 8+ años, dirección real. |
+| "100 % clientes satisfechos" | Nadie se lo cree. | Fuera. 140+ comercios, 8+ años, dirección real. |
 | "Te damos de alta en ARCA" | Falso: lo hace el titular. | "Te guiamos en ARCA… lo hacés con tu Clave Fiscal, paso a paso con nosotros." |
 | "La página de ARCA se cae" | No lo podemos probar. | Se compara cantidad de pasos, que es verificable. |
 | "Más barato" | No hay precio público. | "Sin costo por factura. Te pasamos el precio por WhatsApp." |
@@ -156,9 +156,9 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 
 | Claim | Fuente |
 |---|---|
-| 60+ comercios activos | Home actual (Wix), sección "Nuestra trayectoria", publicado por el cliente. Reconfirmar antes de pautar. |
-| 8+ años de experiencia | Ídem. |
-| Facturas A, B y C con CAE automático, notas de crédito y débito | PDF "Funcionalidades principales" |
+| 140+ comercios activos | El cliente: 141 comercios activos al 2026-10-19 (el Wix decía 60+). Reconfirmar antes de pautar. |
+| 8+ años de experiencia | El cliente: en el mercado desde 2018. El número se calcula al año en curso. |
+| Facturas A, B y C con CAE automático y notas de crédito (las de débito no están implementadas: se sacaron del sitio el 2026-10-19) | PDF "Funcionalidades principales" |
 | Alta masiva CSV/Excel, variantes, categorías | PDF |
 | Código de barras, varios medios de pago por venta | PDF ("Punto de venta (POS)") |
 | Impresión térmica, PDF, etiquetas de góndola | PDF |
@@ -174,9 +174,9 @@ Volumen de búsqueda: **no medido** (no hay acceso a Keyword Planner desde acá)
 
 ## Pendientes para el cliente
 
-1. **Capturas reales de la app** (venta y ticket) para que la pantalla del equipo en el fold sea la UI de verdad. Hoy es una recreación.
+1. ~~**Capturas reales de la app**~~ Hecho el 2026-10-19 (ver «Antes de leer»).
 2. ¿Pueden sostener **"en segundos"**? Si tienen un tiempo medido de emisión (de tocar "Emitir" al ticket), mejor ponerlo con su base.
 3. **Testimonios**: pedir a 3 comercios, con esta pregunta: "¿Cómo facturabas antes de TeFacturo y qué cambió en el mostrador?", y permiso escrito para nombre, rubro y foto.
 4. ¿Agregamos la **referencia de campaña** (`utm_campaign`) al final del mensaje de WhatsApp para atribuir conversaciones? Está implementado; se apaga con `WA_REF = False` en `tools/landing.py`.
 5. **IDs de medición**: Meta Pixel y Google Tag (GA4/Ads). Sin eso, la página no reporta conversiones. Se configuran en `tools/landing.py` (`META_PIXEL_ID`, `GTAG_ID`).
-6. Reconfirmar **60+ comercios** y **8+ años** el día que arranca la pauta.
+6. Reconfirmar **140+ comercios** el día que arranca la pauta (los años se actualizan solos).

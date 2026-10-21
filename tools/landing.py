@@ -5,11 +5,12 @@ abrir WhatsApp. `noindex` y fuera del sitemap. Copy y fuentes de cada dato: src/
 
 Corre sola (`python3 tools/landing.py`) o desde build_site.py.
 """
-import glob, html, json, re
+import glob, html, json, re, shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / 'src' / 'landing' / 'empezar.html'
+APP_SHOTS = ROOT / 'src' / 'landing' / 'app'   # capturas de la app (venta de homologación en el alpha, 2026-10-19)
 SLUG = 'empezar'
 
 # Medición: completar con los IDs del cliente. Vacíos = no se carga ningún script de terceros.
@@ -55,18 +56,23 @@ def build(out_dir, cfg):
     url = cfg['site'] + SLUG + '/'
     head, body = tracking()
     vals = {'URL': url, 'SITE': cfg['site'], 'WA': cfg['whatsapp'], 'WA_BASE': cfg['whatsapp'],
-            'WA_REF': json.dumps(WA_REF), 'PHOTO': photo(out_dir), 'TRACKING_HEAD': head, 'TRACKING_BODY': body}
+            'WA_REF': json.dumps(WA_REF), 'PHOTO': photo(out_dir), 'TRACKING_HEAD': head, 'TRACKING_BODY': body,
+            'YEARS': cfg['years'], 'ACTIVE': cfg['active']}
     out = SRC.read_text(encoding='utf-8')
     for k, v in vals.items():
         out = out.replace('{{%s}}' % k, v)
     assert '{{' not in out, re.findall(r'\{\{\w+\}\}', out)
     (out_dir / SLUG).mkdir(parents=True, exist_ok=True)
     (out_dir / SLUG / 'index.html').write_text(out, encoding='utf-8')
+    # Capturas reales de la app que pasan en la pantalla del equipo (ver APP_SHOTS en COPY.md)
+    shots = out_dir / SLUG / 'app'
+    shutil.rmtree(shots, ignore_errors=True)
+    shutil.copytree(APP_SHOTS, shots)
     print('  landing: /%s/ (%d KB)' % (SLUG, len(out.encode()) // 1024))
 
 
 if __name__ == '__main__':
     import sys
     sys.path.insert(0, str(ROOT / 'tools'))
-    from build_site import SITE_URL, WHATSAPP_URL, OUT
-    build(OUT, {'site': SITE_URL, 'whatsapp': WHATSAPP_URL})
+    from build_site import OUT, site_cfg
+    build(OUT, site_cfg())
