@@ -267,6 +267,8 @@ TEXT_FIXES = [
     ('Por qué elegrinos', 'Por qué elegirnos'),
     # Teléfono de contacto (2026-11-17): el del Wix ya no es el de TeFacturo
     ('+54 9 2926 508200', '+54 9 2926 526901'),
+    # Mail de contacto (2026-11-17): el dominio principal es tefacturo.ar
+    ('contacto@tefacturo.com.ar', 'contacto@tefacturo.ar'),
 ]
 
 
@@ -737,12 +739,12 @@ def schema():
     return {'@context': 'https://schema.org', '@graph': [
         {'@type': 'Organization', '@id': org, 'name': 'TeFacturo', 'url': SITE_URL,
          'logo': SITE_URL + 'assets/favicon/icon-512.png', 'image': SITE_URL + 'assets/img/og-image.png',
-         'description': DESCRIPTION, 'email': 'contacto@tefacturo.com.ar', 'telephone': '+54 9 2926 526901',
+         'description': DESCRIPTION, 'email': 'contacto@tefacturo.ar', 'telephone': '+54 9 2926 526901',
          'address': {'@type': 'PostalAddress', 'streetAddress': 'Mitre 1058', 'addressLocality': 'Coronel Suárez',
                      'addressRegion': 'Buenos Aires', 'addressCountry': 'AR'},
          'areaServed': {'@type': 'Country', 'name': 'Argentina'},
          'contactPoint': {'@type': 'ContactPoint', 'contactType': 'customer support', 'telephone': '+54 9 2926 526901',
-                          'email': 'contacto@tefacturo.com.ar', 'availableLanguage': 'es'}},
+                          'email': 'contacto@tefacturo.ar', 'availableLanguage': 'es'}},
         {'@type': 'WebSite', '@id': SITE_URL + '#website', 'url': SITE_URL, 'name': 'TeFacturo',
          'inLanguage': 'es-AR', 'publisher': {'@id': org}},
         {'@type': 'SoftwareApplication', 'name': 'TeFacturo', 'url': SITE_URL,
@@ -793,7 +795,7 @@ sin conocimientos técnicos. Reemplaza los sistemas complejos o el uso directo d
 
 - Web: {u}
 - WhatsApp: {w}
-- Email: contacto@tefacturo.com.ar
+- Email: contacto@tefacturo.ar
 - Dirección: Mitre 1058, Coronel Suárez, Buenos Aires, Argentina
 - [Funcionalidades principales (PDF)]({u}assets/docs/{p})
 '''.format(d=DESCRIPTION, u=SITE_URL, w=WHATSAPP_URL, p=PDF_NAME) + (
