@@ -111,7 +111,7 @@ Para qué: cerrar con el mismo botón y, opcionalmente, calificar el lead en dos
 - **Pregunta 2 (opcional):** ¿Cómo facturás hoy? En la web de ARCA · Con otro sistema · Todavía no facturo
 - **CTA:** Seguir por WhatsApp
 - **Mensaje que se abre:** "Hola, quiero mi TeFacturo. Tengo [rubro] y hoy [cómo factura]." (+ referencia de campaña si viene con `utm_campaign`, ver pendiente 4).
-- **Debajo:** +54 9 2926 508200 · contacto@tefacturo.com.ar
+- **Debajo:** +54 9 2926 526901 · contacto@tefacturo.com.ar
 
 ## 8. Barra fija en celular
 

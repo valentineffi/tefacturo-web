@@ -70,6 +70,41 @@ FEATURE_CSS = '''
 .tf-login.is-compact span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .tf-login:hover{background:#010A0A;color:#fff}
 .tf-login:focus-visible{outline:2px solid #FF5B04;outline-offset:2px}
+/* Encabezado propio (2026-11-17, decisión del usuario: no hace falta respetar el menú de Wix). Ocupa el
+   <header> de Wix, que sigue dando el alto y el sticky; lo de Wix queda oculto. */
+#comp-kbgakxea>:not(.tf-header){visibility:hidden!important}
+.tf-header{position:absolute;inset:0;z-index:5;display:flex;align-items:center;gap:20px;box-sizing:border-box;
+  padding:0 clamp(16px,4.6vw,88px);font:400 15px/1.2 inter,sans-serif;color:#010A0A;transition:background-color .2s,box-shadow .2s}
+.tf-header.is-scrolled{background:rgba(245,245,245,.94);box-shadow:0 1px 0 rgba(1,10,10,.08);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.tf-h-logo{flex:none;display:flex}
+.tf-h-logo img{display:block;height:30px;width:auto}
+.tf-h-nav{flex:1;min-width:0;display:flex;justify-content:center;gap:clamp(14px,1.3vw,22px);white-space:nowrap;font-size:14.5px}
+.tf-h-nav a,.tf-h-drawer nav a{color:inherit;text-decoration:none;transition:color .2s}
+.tf-h-nav a:hover,.tf-h-drawer nav a:hover{color:#FF5B04}
+.tf-h-actions{flex:none;display:flex;align-items:center;gap:12px;margin-left:auto}
+.tf-header .tf-login{position:static;transform:none;visibility:visible;height:42px;padding:0 .95em;font:500 14.5px/1 inter,sans-serif}
+.tf-h-cta{display:inline-flex;align-items:center;height:44px;padding:0 1.35em;border-radius:999px;white-space:nowrap;
+  background:linear-gradient(90deg,#FF5B04 35%,#010A0A);color:#fff;font:600 14.5px/1 inter,sans-serif;text-decoration:none;
+  transition:filter .2s,box-shadow .2s}
+.tf-h-cta:hover{filter:brightness(1.08);box-shadow:0 6px 18px rgba(255,91,4,.25)}
+.tf-h-burger{display:none;flex:none;width:44px;height:44px;border:1px solid rgba(1,10,10,.15);border-radius:999px;background:#fff;cursor:pointer;
+  align-items:center;justify-content:center;padding:0;color:#010A0A}
+.tf-h-burger svg{width:22px;height:22px}
+.tf-header a:focus-visible,.tf-h-burger:focus-visible,.tf-h-drawer a:focus-visible{outline:2px solid #FF5B04;outline-offset:3px}
+.tf-header.is-compact .tf-h-nav{display:none}
+.tf-header.is-compact .tf-h-burger{display:inline-flex}
+@media (max-width:700px){.tf-header .tf-login,.tf-header .tf-h-cta{display:none}.tf-h-logo img{height:30px}}
+.tf-h-drawer{position:fixed;left:0;right:0;z-index:30;box-sizing:border-box;max-height:calc(100vh - var(--tf-h-top,100px));overflow:auto;
+  padding:8px clamp(16px,4.6vw,88px) 28px;background:#F5F5F5;box-shadow:0 18px 30px rgba(1,10,10,.12);font:400 18px/1.3 inter,sans-serif;color:#010A0A}
+.tf-h-drawer[hidden]{display:none}
+.tf-h-drawer nav{display:flex;flex-direction:column}
+.tf-h-drawer nav a{padding:14px 0;border-bottom:1px solid rgba(1,10,10,.08)}
+.tf-h-drawer .tf-h-login{margin:22px 0 0}
+.tf-h-drawer .tf-h-login p{margin:0 0 10px;font-size:13px;color:#5B6666}
+.tf-h-drawer .tf-h-login a{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;margin-bottom:8px;border:1px solid rgba(1,10,10,.15);
+  border-radius:12px;background:#fff;color:#010A0A;text-decoration:none;font-size:16px}
+.tf-h-drawer .tf-h-login a span{font-size:13px;color:#5B6666}
+.tf-h-drawer .tf-h-cta{display:flex;justify-content:center;margin-top:14px;height:50px}
 /* "Ingresar" pregunta a qué sistema: el nuevo o el anterior (LOGIN_TARGETS); va en el <body>, con position:fixed */
 .tf-login-menu{position:fixed;z-index:1000;width:280px;max-width:calc(100vw - 32px);box-sizing:border-box;padding:8px;border-radius:16px;
   background:#fff;box-shadow:0 8px 28px rgba(1,10,10,.18),0 1px 3px rgba(1,10,10,.08);font-family:inter,sans-serif;color:#010A0A}
@@ -145,7 +180,7 @@ FEATURE_CSS = '''
 '''
 
 # Desvíos deliberados respecto del Wix (ver CLAUDE.md > "Diferencias con Wix")
-WHATSAPP_URL = 'https://wa.me/5492926508200'
+WHATSAPP_URL = 'https://wa.me/5492926526901'
 # El sistema (front web de producción) y la API de la que la sección de planes lee los precios
 APP_URL = 'https://web.tefacturo.ar/'
 # "Ingresar" pregunta a cuál de los dos sistemas (decisión del usuario, 2026-10-20): los comercios que siguen en el
@@ -230,6 +265,8 @@ TEXT_FIXES = [
     ('Solo necesitas completar un formulario con tus datos fiscales, Nosotros',
      'Solo necesitás completar un formulario con tus datos fiscales, nosotros'),
     ('Por qué elegrinos', 'Por qué elegirnos'),
+    # Teléfono de contacto (2026-11-17): el del Wix ya no es el de TeFacturo
+    ('+54 9 2926 508200', '+54 9 2926 526901'),
 ]
 
 
@@ -574,6 +611,36 @@ def insert_after_element(dom, start_pat, html_block):
     raise AssertionError('no encontré el cierre de ' + start_pat)
 
 
+# Encabezado propio: secciones del menú (id de la sección en el DOM) y el destino de "Quiero mi TeFacturo"
+HEADER_LINKS = [
+    (ANCHORS['anchors-mnhrlr5d'], 'Sobre nosotros'), (ANCHORS['anchors-mnhrlyvi'], 'Por qué elegirnos'),
+    (ANCHORS['anchors-mnhrn2bf'], 'Modo de uso'), (ANCHORS['anchors-mpcom8jf'], 'Funciones'),
+    ('planes', 'Planes'), ('descargas', 'Descargar'), (ANCHORS['anchors-mnhrn58c'], 'Contacto'),
+]
+HEADER_CTA = ANCHORS['anchors-mnhrn58c']
+BURGER_ICON = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">'
+               '<path d="M4 7h16M4 12h16M4 17h16"/></svg>')
+
+
+def header_html():
+    """Encabezado (logo, secciones, Ingresar, CTA y hamburguesa) y el panel que despliega la hamburguesa.
+    site.js decide cuándo no entran las secciones (clase is-compact) y arma las opciones de Ingresar."""
+    links = ''.join('<a href="#%s">%s</a>' % (target, label) for target, label in HEADER_LINKS)
+    return ('<div class="tf-header">'
+            '<a class="tf-h-logo" href="#" aria-label="TeFacturo, ir al inicio">'
+            '<img src="assets/brand/tefacturo-isologotipo-horizontal-negro.svg" alt="TeFacturo" width="168" height="30"></a>'
+            '<nav class="tf-h-nav" aria-label="Secciones">%s</nav>'
+            '<div class="tf-h-actions">'
+            '<a class="tf-login is-placed" href="%s" title="Ingresar al sistema">%s<span>Ingresar</span></a>'
+            '<a class="tf-h-cta" href="#%s">Quiero mi TeFacturo</a>'
+            '<button type="button" class="tf-h-burger" aria-label="Abrir el menú" aria-expanded="false" aria-controls="tf-h-drawer">%s</button>'
+            '</div></div>'
+            '<div class="tf-h-drawer" id="tf-h-drawer" hidden><nav aria-label="Secciones">%s</nav>'
+            '<div class="tf-h-login"></div>'
+            '<a class="tf-h-cta" href="#%s">Quiero mi TeFacturo</a></div>'
+            % (links, APP_URL, LOGIN_ICON, HEADER_CTA, BURGER_ICON, links, HEADER_CTA))
+
+
 def remove_element(dom, start_pat):
     """Borra el elemento que abre en start_pat (regex) con todo su contenido (balanceando <div>/<tag>)."""
     m = re.search(start_pat, dom)
@@ -599,7 +666,8 @@ def clean(dom):
     dom = re.sub(r'<title>.*?</title>', '', dom, flags=re.S)
     dom = re.sub(r'<!--.*?-->', '', dom, flags=re.S)
     # Banner "Creado con Wix" y diálogo sobrante del template (oculto, con textos de ejemplo)
-    for pat in [r'<div id="WIX_ADS"[^>]*>', r'<div id="comp-kd5px9q0"[^>]*>']:
+    # comp-moeh5sbw: segundo mail del contacto (una cuenta personal; decisión del usuario, 2026-11-17)
+    for pat in [r'<div id="WIX_ADS"[^>]*>', r'<div id="comp-kd5px9q0"[^>]*>', r'<div id="comp-moeh5sbw"[^>]*>']:
         dom, ok = remove_element(dom, pat)
         print('  remove', pat[9:30], ok)
     # Overlay del menú hamburguesa: Wix crea el contenedor del <nav> recién al abrir. Usamos el overlay
@@ -669,11 +737,11 @@ def schema():
     return {'@context': 'https://schema.org', '@graph': [
         {'@type': 'Organization', '@id': org, 'name': 'TeFacturo', 'url': SITE_URL,
          'logo': SITE_URL + 'assets/favicon/icon-512.png', 'image': SITE_URL + 'assets/img/og-image.png',
-         'description': DESCRIPTION, 'email': 'contacto@tefacturo.com.ar', 'telephone': '+54 9 2926 508200',
+         'description': DESCRIPTION, 'email': 'contacto@tefacturo.com.ar', 'telephone': '+54 9 2926 526901',
          'address': {'@type': 'PostalAddress', 'streetAddress': 'Mitre 1058', 'addressLocality': 'Coronel Suárez',
                      'addressRegion': 'Buenos Aires', 'addressCountry': 'AR'},
          'areaServed': {'@type': 'Country', 'name': 'Argentina'},
-         'contactPoint': {'@type': 'ContactPoint', 'contactType': 'customer support', 'telephone': '+54 9 2926 508200',
+         'contactPoint': {'@type': 'ContactPoint', 'contactType': 'customer support', 'telephone': '+54 9 2926 526901',
                           'email': 'contacto@tefacturo.com.ar', 'availableLanguage': 'es'}},
         {'@type': 'WebSite', '@id': SITE_URL + '#website', 'url': SITE_URL, 'name': 'TeFacturo',
          'inLanguage': 'es-AR', 'publisher': {'@id': org}},
@@ -756,7 +824,7 @@ def main():
     dom = semantics(dom)
     # "Ingresar" al sistema: en Wix no existía. site.js lo ubica al lado del botón del encabezado.
     dom = insert_after_element(dom, r'<section id="comp-mpcom3xk"', plans_section() + downloads_section())
-    dom = re.sub(r'(<header id="comp-kbgakxea"[^>]*>)', r'\1<a class="tf-login" href="%s" title="Ingresar al sistema">%s<span>Ingresar</span></a>' % (APP_URL, LOGIN_ICON), dom, count=1)
+    dom = re.sub(r'(<header id="comp-kbgakxea"[^>]*>)', lambda m: m.group(1) + header_html(), dom, count=1)
     for a, b in TEXT_FIXES + TRAJECTORY + FAQ_FIXES:
         if a not in dom:
             print('  OJO: no encontré el texto a corregir:', a)

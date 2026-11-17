@@ -132,7 +132,9 @@
   /* ---------- scroll a secciones ---------- */
   function scrollToId(id) {
     var el = id && document.getElementById(id);
-    var y = el ? el.getBoundingClientRect().top + window.scrollY : 0;
+    // El encabezado queda fijo arriba: la sección arranca debajo de él, no tapada
+    var head = document.getElementById('comp-kbgakxea');
+    var y = el ? Math.max(0, el.getBoundingClientRect().top + window.scrollY - (head ? head.offsetHeight : 0)) : 0;
     window.scrollTo({ top: y, behavior: reduce ? 'auto' : 'smooth' });
   }
   document.addEventListener('click', function (e) {
@@ -334,10 +336,71 @@
     }
     login.classList.add('is-placed');
   }
-  if (login) {
+  if (login && !login.closest('.tf-header')) {  // en el encabezado propio ya tiene su lugar
     placeLogin();
     window.addEventListener('resize', placeLogin);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeLogin);
+  }
+
+  /* ---------- encabezado propio: secciones que no entran -> hamburguesa; fondo al hacer scroll ---------- */
+  var tfHeader = $('.tf-header');
+  if (tfHeader) {
+    var hNav = $('.tf-h-nav', tfHeader), hBurger = $('.tf-h-burger', tfHeader), drawer = document.getElementById('tf-h-drawer');
+    // Las secciones van en una línea si entran: lo que ocupan (cada link + el espacio entre ellos) contra el
+    // ancho que les deja el encabezado. Se mide con el menú visible.
+    var fitHeader = function () {
+      tfHeader.classList.remove('is-compact');
+      var links = $$('a', hNav), gap = parseFloat(getComputedStyle(hNav).columnGap) || 0;
+      var need = links.reduce(function (sum, a) { return sum + a.getBoundingClientRect().width; }, 0) + gap * (links.length - 1);
+      var compact = hNav.getBoundingClientRect().width < need + 8;
+      tfHeader.classList.toggle('is-compact', compact);
+      if (!compact) closeDrawer();
+    };
+    var onScroll = function () { tfHeader.classList.toggle('is-scrolled', window.scrollY > 8); };
+    var placeDrawer = function () {
+      var top = Math.round(tfHeader.getBoundingClientRect().bottom);
+      drawer.style.top = top + 'px';
+      drawer.style.setProperty('--tf-h-top', top + 'px');
+    };
+    var closeDrawer = function (focusBack) {
+      if (!drawer || drawer.hidden) return;
+      drawer.hidden = true;
+      hBurger.setAttribute('aria-expanded', 'false');
+      hBurger.setAttribute('aria-label', 'Abrir el menú');
+      if (focusBack) hBurger.focus();
+    };
+    // El panel va en el <body>: fuera del header, nada lo recorta
+    if (drawer) document.body.appendChild(drawer);
+    // Ingresar en el panel: las dos opciones a la vista (en el celular el botón no está)
+    var hLogin = drawer && $('.tf-h-login', drawer);
+    if (hLogin && CFG.login && CFG.login.options) {
+      var lt = document.createElement('p');
+      lt.textContent = CFG.login.title;
+      hLogin.appendChild(lt);
+      CFG.login.options.forEach(function (o) {
+        var a = document.createElement('a'), b = document.createElement('b'), d = document.createElement('span');
+        a.href = o.url; b.textContent = o.name; d.textContent = o.detail;
+        a.appendChild(b); a.appendChild(d); hLogin.appendChild(a);
+      });
+    }
+    hBurger.addEventListener('click', function () {
+      if (!drawer.hidden) { closeDrawer(false); return; }
+      placeDrawer();
+      drawer.hidden = false;
+      hBurger.setAttribute('aria-expanded', 'true');
+      hBurger.setAttribute('aria-label', 'Cerrar el menú');
+    });
+    // Un link del panel lleva a su sección (el manejador de a[href^="#"] hace el scroll) y cierra
+    drawer.addEventListener('click', function (e) { if (e.target.closest('a')) closeDrawer(false); });
+    document.addEventListener('click', function (e) {
+      if (!drawer.hidden && !drawer.contains(e.target) && !hBurger.contains(e.target)) closeDrawer(false);
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDrawer(true); });
+    window.addEventListener('resize', function () { fitHeader(); if (!drawer.hidden) placeDrawer(); });
+    window.addEventListener('scroll', onScroll, { passive: true });
+    fitHeader();
+    onScroll();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeader);
   }
 
   /* ---------- "Ingresar" pregunta a qué sistema: el nuevo o el anterior (CFG.login) ---------- */
